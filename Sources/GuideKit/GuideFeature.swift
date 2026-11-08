@@ -28,14 +28,17 @@ public struct GuideFeature {
     static func load(urls: [URL], namespace: String) -> (flows: [Flow], errors: [String]) {
         var flows: [Flow] = []
         var errors: [String] = []
-        for url in urls {
+        var seen = Set<String>()
+        for url in urls.sorted(by: { $0.path < $1.path }) {
             do {
                 let flow = try JSONDecoder().decode(Flow.self, from: Data(contentsOf: url))
                 let problems = FlowValidator.validate([flow], namespace: namespace)
-                if problems.isEmpty {
-                    flows.append(flow)
-                } else {
+                if !problems.isEmpty {
                     errors.append(contentsOf: problems.map { "\(url.lastPathComponent): \($0.description)" })
+                } else if !seen.insert(flow.id).inserted {
+                    errors.append("\(url.lastPathComponent): \(FlowValidationError.duplicateFlowID(flow.id).description)")
+                } else {
+                    flows.append(flow)
                 }
             } catch {
                 errors.append("\(url.lastPathComponent): \(error)")

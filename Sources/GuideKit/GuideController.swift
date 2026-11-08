@@ -37,6 +37,7 @@ public final class GuideController {
 
     public let flows: [Flow]
     public private(set) var presentation: GuidePresentation?
+    public private(set) var status: GuideStatus
 
     @ObservationIgnored private var runtime = GuideRuntime()
     @ObservationIgnored private var prepares: [String: @MainActor () -> Void] = [:]
@@ -50,14 +51,21 @@ public final class GuideController {
                 sleep: @escaping @Sendable (Duration) async -> Void = { try? await Task.sleep(for: $0) }) {
         self.sleep = sleep
         var all: [Flow] = []
+        var seen = Set<String>()
+        var prepares: [String: @MainActor () -> Void] = [:]
         for feature in features {
-            all += feature.flows
-            for flow in feature.flows { prepares[flow.id] = feature.prepare }
+            // The first feature to register an ID wins, including its prepare.
+            for flow in feature.flows where seen.insert(flow.id).inserted {
+                all.append(flow)
+                prepares[flow.id] = feature.prepare
+            }
         }
         flows = all
+        self.prepares = prepares
+        status = GuideStatus(state: "idle", allFlowIDs: all.map(\.id))
     }
 
-    public var status: GuideStatus {
+    private func computeStatus() -> GuideStatus {
         let ids = flows.map(\.id)
         switch runtime.state {
         case .idle:
@@ -104,6 +112,10 @@ public final class GuideController {
     }
 
     private func send(_ event: GuideEvent) {
+        defer {
+            let latest = computeStatus()
+            if latest != status { status = latest }
+        }
         for effect in runtime.handle(event) {
             switch effect {
             case .present(let index, let step):
