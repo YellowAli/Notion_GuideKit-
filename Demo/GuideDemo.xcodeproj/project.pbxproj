@@ -7,17 +7,31 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B5540A19646E3D6AAC55398 /* AllFlowsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7CCC4268CB35780C0523B5 /* AllFlowsUITests.swift */; };
 		6C12D2C4D042FFF40B125972 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = 37B849E570C18902CA393D93 /* DesignSystem */; };
 		73A4020DBD115149C07500B2 /* GuideDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29FEBB0713FCD9B4D89DD4C1 /* GuideDemoApp.swift */; };
 		7FF4DE6FF5B31D25E1DBB8C0 /* EditorFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 3806D58FE22DD0F9BF36DABA /* EditorFeature */; };
 		9A5158CD96F46E752D59074D /* GuideKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3CBBC245B3F52C91EECEC0A8 /* GuideKit */; };
+		B5CE6FB66D0490102D035BE0 /* GuideKitTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 11DC35516CB92B2961C48084 /* GuideKitTesting */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D69C9BD69DECD858A053EA61 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1AD9A543C4029C334F7285A6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B116BD66AE4BB2B391AE4B18;
+			remoteInfo = GuideDemo;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		0DCE7ED1A14D0EB4E32400A5 /* DesignSystem */ = {isa = PBXFileReference; lastKnownFileType = folder; name = DesignSystem; path = Packages/DesignSystem; sourceTree = SOURCE_ROOT; };
 		29FEBB0713FCD9B4D89DD4C1 /* GuideDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideDemoApp.swift; sourceTree = "<group>"; };
 		71C4B2F7B373504FDA5DE369 /* GuideDemo.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = GuideDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7F7CCC4268CB35780C0523B5 /* AllFlowsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllFlowsUITests.swift; sourceTree = "<group>"; };
 		814C27A433C92970E5D102B4 /* EditorFeature */ = {isa = PBXFileReference; lastKnownFileType = folder; name = EditorFeature; path = Packages/EditorFeature; sourceTree = SOURCE_ROOT; };
+		C75B263FC9B3B8AE2E588C2E /* GuideDemoUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = GuideDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF1D6E41726027C85212D4D3 /* Notion_GuideKit- */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Notion_GuideKit-"; path = ..; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -29,6 +43,14 @@
 				9A5158CD96F46E752D59074D /* GuideKit in Frameworks */,
 				6C12D2C4D042FFF40B125972 /* DesignSystem in Frameworks */,
 				7FF4DE6FF5B31D25E1DBB8C0 /* EditorFeature in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ECE625A222177E2E69E1EEBE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B5CE6FB66D0490102D035BE0 /* GuideKitTesting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -47,6 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				71C4B2F7B373504FDA5DE369 /* GuideDemo.app */,
+				C75B263FC9B3B8AE2E588C2E /* GuideDemoUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -61,10 +84,19 @@
 			path = Packages;
 			sourceTree = "<group>";
 		};
+		596DE69155746C188A5C7D89 /* GuideDemoUITests */ = {
+			isa = PBXGroup;
+			children = (
+				7F7CCC4268CB35780C0523B5 /* AllFlowsUITests.swift */,
+			);
+			path = GuideDemoUITests;
+			sourceTree = "<group>";
+		};
 		5F6007A104F104BDF9ED406E = {
 			isa = PBXGroup;
 			children = (
 				1D2C551D22955F3ADB91C65D /* GuideDemo */,
+				596DE69155746C188A5C7D89 /* GuideDemoUITests */,
 				4AF7CD5633325149CA506736 /* Packages */,
 				2B77BE1B7A3914D980BDB0A4 /* Products */,
 			);
@@ -94,6 +126,26 @@
 			productReference = 71C4B2F7B373504FDA5DE369 /* GuideDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
+		C9BA15378AA7B80F55DF3D41 /* GuideDemoUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F327C6FCEF465AA97AFC54E1 /* Build configuration list for PBXNativeTarget "GuideDemoUITests" */;
+			buildPhases = (
+				77214C14B449B9010D855481 /* Sources */,
+				ECE625A222177E2E69E1EEBE /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5F6D35EB22FBA0757DA5D546 /* PBXTargetDependency */,
+			);
+			name = GuideDemoUITests;
+			packageProductDependencies = (
+				11DC35516CB92B2961C48084 /* GuideKitTesting */,
+			);
+			productName = GuideDemoUITests;
+			productReference = C75B263FC9B3B8AE2E588C2E /* GuideDemoUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -103,6 +155,9 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					C9BA15378AA7B80F55DF3D41 = {
+						TestTargetID = B116BD66AE4BB2B391AE4B18;
+					};
 				};
 			};
 			buildConfigurationList = 56D8D7A70B268BFBF65A8E9C /* Build configuration list for PBXProject "GuideDemo" */;
@@ -125,6 +180,7 @@
 			projectRoot = "";
 			targets = (
 				B116BD66AE4BB2B391AE4B18 /* GuideDemo */,
+				C9BA15378AA7B80F55DF3D41 /* GuideDemoUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -138,9 +194,45 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		77214C14B449B9010D855481 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5B5540A19646E3D6AAC55398 /* AllFlowsUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		5F6D35EB22FBA0757DA5D546 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B116BD66AE4BB2B391AE4B18 /* GuideDemo */;
+			targetProxy = D69C9BD69DECD858A053EA61 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		0BF7F505A59F18112CA70CF7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGN_IDENTITY = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.GuideDemoUITests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = GuideDemo;
+			};
+			name = Debug;
+		};
 		0F1A609A4DEFD2C0F8672E8D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -237,6 +329,26 @@
 			};
 			name = Debug;
 		};
+		B4AFF176D9D4DF8EBF0FF4FE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGN_IDENTITY = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.GuideDemoUITests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = GuideDemo;
+			};
+			name = Release;
+		};
 		D27DE2DEDF223F0560604F73 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -312,6 +424,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		F327C6FCEF465AA97AFC54E1 /* Build configuration list for PBXNativeTarget "GuideDemoUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0BF7F505A59F18112CA70CF7 /* Debug */,
+				B4AFF176D9D4DF8EBF0FF4FE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		F7C0F6CF46AEDB57CEE8DAA5 /* Build configuration list for PBXNativeTarget "GuideDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -339,6 +460,10 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		11DC35516CB92B2961C48084 /* GuideKitTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GuideKitTesting;
+		};
 		37B849E570C18902CA393D93 /* DesignSystem */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DesignSystem;

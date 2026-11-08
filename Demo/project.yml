@@ -29,6 +29,21 @@ targets:
         INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
         CODE_SIGNING_ALLOWED: NO
         CODE_SIGN_IDENTITY: ""
+  GuideDemoUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [GuideDemoUITests]
+    dependencies:
+      - target: GuideDemo
+      - package: GuideKit
+        product: GuideKitTesting
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.GuideDemoUITests
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGN_IDENTITY: ""
 schemes:
   GuideDemo:
     build:
@@ -38,3 +53,4 @@ schemes:
       config: Debug
     test:
       config: Debug
+      targets: [GuideDemoUITests]
