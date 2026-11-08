@@ -52,6 +52,8 @@ public struct GuideRuntime {
     private var armed = true
     private var tapped = false
     private var lastToken = 0
+    /// The only token whose timeout is honored; nil when no timer is outstanding.
+    private var activeToken: Int?
 
     public init() {}
 
@@ -63,6 +65,7 @@ public struct GuideRuntime {
             self.facts = facts
             guard !flow.steps.isEmpty else {
                 state = .completed(flowID: flow.id)
+                activeToken = nil
                 return [.dismiss]
             }
             return enter(flow: flow, step: 0)
@@ -70,6 +73,7 @@ public struct GuideRuntime {
         case .cancel:
             guard case .waiting = state else { return [] }
             state = .idle
+            activeToken = nil
             return [.dismiss]
 
         case .factsChanged(let facts):
@@ -79,12 +83,29 @@ public struct GuideRuntime {
 
         case .targetsChanged(let targets):
             guard case .waiting = state else { return [] }
+            let wasPresent: Bool
+            if case .waiting(let flow, let index) = state {
+                wasPresent = self.targets.contains(flow.steps[index].target)
+            } else {
+                wasPresent = true
+            }
             self.targets = targets
-            return evaluate(tapOnTarget: false)
+            let before = state
+            var effects = evaluate(tapOnTarget: false)
+            // Before a tap, a vanishing target starts a timer and a returning one cancels it.
+            if state == before, case .waiting(let flow, let index) = state, !tapped {
+                let isPresent = targets.contains(flow.steps[index].target)
+                if wasPresent && !isPresent {
+                    effects.append(schedule())
+                } else if !wasPresent && isPresent {
+                    activeToken = nil
+                }
+            }
+            return effects
 
         case .targetTapped(let name):
             guard case .waiting(let flow, let index) = state, flow.steps[index].target == name else {
-                // A tap elsewhere can still satisfy nothing; `tapped` only counts the current target.
+                // Only a tap on the current step's target counts.
                 return []
             }
             armed = true
@@ -96,12 +117,14 @@ public struct GuideRuntime {
             return effects
 
         case .timeout(let token):
-            guard case .waiting(let flow, let index) = state, token == lastToken else { return [] }
+            guard case .waiting(let flow, let index) = state, token == activeToken else { return [] }
             let step = flow.steps[index]
-            if !targets.contains(step.target) {
-                return fail(.targetNotFound(flowID: flow.id, step: index, target: step.target))
+            guard tapped else {
+                if !targets.contains(step.target) {
+                    return fail(.targetNotFound(flowID: flow.id, step: index, target: step.target))
+                }
+                return []
             }
-            guard tapped else { return [] }
             switch step.completeWhen {
             case .factEquals(let key, _), .factIncreased(let key, _):
                 if facts[key] == nil {
@@ -118,17 +141,20 @@ public struct GuideRuntime {
 
     private mutating func schedule() -> GuideEffect {
         lastToken += 1
+        activeToken = lastToken
         return .scheduleTimeout(token: lastToken)
     }
 
     private mutating func fail(_ failure: GuideFailure) -> [GuideEffect] {
         state = .failed(failure)
+        activeToken = nil
         return [.dismiss]
     }
 
     private mutating func enter(flow: Flow, step index: Int) -> [GuideEffect] {
         let step = flow.steps[index]
         tapped = false
+        activeToken = nil
         baseline = nil
         if case .factIncreased(let key, _) = step.completeWhen, let value = facts[key] {
             guard case .int(let n) = value else {
@@ -187,6 +213,7 @@ public struct GuideRuntime {
             return enter(flow: flow, step: index + 1)
         }
         state = .completed(flowID: flow.id)
+        activeToken = nil
         return [.dismiss]
     }
 

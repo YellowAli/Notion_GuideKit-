@@ -68,10 +68,73 @@ final class GuideRuntimeTests: XCTestCase {
     }
 
     func testIdleUserNeverTimesOut() {
+        // Target present, no tap: no timer exists, so no token can fail the step.
         var rt = GuideRuntime()
         let f = flow([step("a", .factEquals(key: "k", value: .int(1)))])
-        let effects = rt.handle(.start(f, targets: ["a"], facts: [:]))
-        XCTAssertEqual(effects, [.present(step: 0, f.steps[0])])
+        XCTAssertEqual(rt.handle(.start(f, targets: ["a"], facts: [:])), [.present(step: 0, f.steps[0])])
+        for token in 0...3 {
+            XCTAssertEqual(rt.handle(.timeout(token: token)), [])
+            XCTAssertEqual(rt.state, .waiting(flow: f, step: 0))
+        }
+    }
+
+    func testIdleProtectionOnCurrentTimeoutWithTargetPresent() {
+        // Target vanishes (token 2 would be current) then returns: timer is invalidated, user never tapped.
+        var rt = GuideRuntime()
+        let f = flow([step("a", .factEquals(key: "k", value: .int(1)))])
+        _ = rt.handle(.start(f, targets: [], facts: [:]))          // token 1
+        _ = rt.handle(.targetsChanged(["a"]))                      // invalidates token 1
+        XCTAssertEqual(rt.handle(.timeout(token: 1)), [])
+        XCTAssertEqual(rt.state, .waiting(flow: f, step: 0))
+    }
+
+    func testTappedTargetThatDisappearsReportsCheckFailureNotTargetNotFound() {
+        var rt = GuideRuntime()
+        let f = flow([step("a", .factEquals(key: "k", value: .int(1)))])
+        _ = rt.handle(.start(f, targets: ["a"], facts: ["k": .int(0)]))
+        XCTAssertEqual(rt.handle(.targetTapped("a")), [.scheduleTimeout(token: 1)])
+        XCTAssertEqual(rt.handle(.targetsChanged([])), [])
+        _ = rt.handle(.timeout(token: 1))
+        XCTAssertEqual(rt.state, .failed(.checkNotPassed(flowID: f.id, step: 0)))
+    }
+
+    func testTargetVanishingBeforeTapFailsAfterTimeout() {
+        var rt = GuideRuntime()
+        let f = flow([step("a", .tapped)])
+        _ = rt.handle(.start(f, targets: ["a"], facts: [:]))
+        XCTAssertEqual(rt.handle(.targetsChanged([])), [.scheduleTimeout(token: 1)])
+        XCTAssertEqual(rt.handle(.timeout(token: 1)), [.dismiss])
+        XCTAssertEqual(rt.state, .failed(.targetNotFound(flowID: f.id, step: 0, target: "a")))
+    }
+
+    func testTargetReappearingCancelsTimeout() {
+        var rt = GuideRuntime()
+        let f = flow([step("a", .tapped)])
+        XCTAssertEqual(rt.handle(.start(f, targets: [], facts: [:])), [.present(step: 0, f.steps[0]), .scheduleTimeout(token: 1)])
+        XCTAssertEqual(rt.handle(.targetsChanged(["a"])), [])
+        XCTAssertEqual(rt.handle(.timeout(token: 1)), [])
+        XCTAssertEqual(rt.state, .waiting(flow: f, step: 0))
+    }
+
+    func testTimerFromPreviousStepIgnoredAfterAdvance() {
+        var rt = GuideRuntime()
+        let f = flow([step("a", .factEquals(key: "k", value: .int(1))), step("b", .tapped)])
+        _ = rt.handle(.start(f, targets: ["a", "b"], facts: ["k": .int(0)]))
+        XCTAssertEqual(rt.handle(.targetTapped("a")), [.scheduleTimeout(token: 1)])
+        _ = rt.handle(.factsChanged(["k": .int(1)]))
+        XCTAssertEqual(rt.state, .waiting(flow: f, step: 1))
+        _ = rt.handle(.targetsChanged(["a"]))                      // b briefly absent: token 2
+        XCTAssertEqual(rt.handle(.timeout(token: 1)), [])
+        XCTAssertEqual(rt.state, .waiting(flow: f, step: 1))
+    }
+
+    func testTimerFromCancelledRunIgnoredAfterRestart() {
+        var rt = GuideRuntime()
+        let f = flow([step("a", .factEquals(key: "k", value: .int(1)))])
+        _ = rt.handle(.start(f, targets: ["a"], facts: [:]))
+        XCTAssertEqual(rt.handle(.targetTapped("a")), [.scheduleTimeout(token: 1)])
+        _ = rt.handle(.cancel)
+        _ = rt.handle(.start(f, targets: ["a"], facts: [:]))
         XCTAssertEqual(rt.handle(.timeout(token: 1)), [])
         XCTAssertEqual(rt.state, .waiting(flow: f, step: 0))
     }
