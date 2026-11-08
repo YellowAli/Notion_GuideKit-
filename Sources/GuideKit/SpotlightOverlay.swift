@@ -70,28 +70,21 @@ struct SpotlightOverlay: View {
     // MARK: - Tooltip
 
     private func tooltip(_ presentation: GuidePresentation, hole: CGRect?, size: CGSize) -> some View {
-        let top = safeArea.top + Self.screenMargin
-        let bottom = size.height - safeArea.bottom - Self.screenMargin
-        var region = top...max(top, bottom)
-        var alignment = Alignment.center
-
-        if let hole {
-            let roomAbove = hole.minY - Self.tooltipGap - top
-            let roomBelow = bottom - (hole.maxY + Self.tooltipGap)
-            if roomBelow >= roomAbove {
-                region = min(bottom, max(top, hole.maxY + Self.tooltipGap))...bottom
-                alignment = .top
-            } else {
-                region = top...max(top, min(bottom, hole.minY - Self.tooltipGap))
-                alignment = .bottom
-            }
-        }
+        let placement = TooltipPlacement.compute(hole: hole, size: size, safeArea: safeArea,
+                                                 gap: Self.tooltipGap, margin: Self.screenMargin)
 
         return card(presentation)
             .frame(maxWidth: Self.tooltipMaxWidth)
             .padding(.horizontal, Self.screenMargin)
-            .frame(width: size.width, height: region.upperBound - region.lowerBound, alignment: alignment)
-            .position(x: size.width / 2, y: (region.lowerBound + region.upperBound) / 2)
+            .frame(width: size.width, height: placement.maxY - placement.minY, alignment: placement.alignment)
+            .position(x: size.width / 2, y: (placement.minY + placement.maxY) / 2)
+    }
+
+    private func message(_ presentation: GuidePresentation) -> some View {
+        Text(presentation.say)
+            .font(.body)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func card(_ presentation: GuidePresentation) -> some View {
@@ -109,9 +102,12 @@ struct SpotlightOverlay: View {
                     .contentShape(Rectangle())
                     .accessibilityIdentifier("guide.exit")
             }
-            Text(presentation.say)
-                .font(.body)
-                .fixedSize(horizontal: false, vertical: true)
+            .layoutPriority(1)
+            // The message scrolls only when it can't fit, so the Exit row is never pushed out.
+            ViewThatFits(in: .vertical) {
+                message(presentation)
+                ScrollView { message(presentation) }
+            }
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 14)
@@ -133,5 +129,32 @@ struct SpotlightOverlay: View {
                 LinearKeyframe(0, duration: 0.06)
             }
         }
+    }
+}
+
+/// Where the tooltip card may sit: always inside the safe screen area, and never so short that Exit is lost.
+struct TooltipPlacement: Equatable {
+    /// Enough for the Exit row plus some message, even at large text sizes.
+    static let minimumHeight: CGFloat = 160
+
+    var minY: CGFloat
+    var maxY: CGFloat
+    var alignment: Alignment
+
+    /// Picks the side of `hole` with more room. When that side is too short, the region grows
+    /// over the hole, because a reachable Exit matters more than an unobstructed target.
+    static func compute(hole: CGRect?, size: CGSize, safeArea: EdgeInsets,
+                        gap: CGFloat, margin: CGFloat) -> TooltipPlacement {
+        let top = safeArea.top + margin
+        let bottom = max(top, size.height - safeArea.bottom - margin)
+        guard let hole else { return TooltipPlacement(minY: top, maxY: bottom, alignment: .center) }
+
+        let minimum = min(minimumHeight, bottom - top)
+        let belowStart = hole.maxY + gap
+        let aboveEnd = hole.minY - gap
+        if bottom - belowStart >= aboveEnd - top {
+            return TooltipPlacement(minY: max(top, min(belowStart, bottom - minimum)), maxY: bottom, alignment: .top)
+        }
+        return TooltipPlacement(minY: top, maxY: min(bottom, max(aboveEnd, top + minimum)), alignment: .bottom)
     }
 }
