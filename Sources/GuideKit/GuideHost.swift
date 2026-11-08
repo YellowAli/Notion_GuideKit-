@@ -6,21 +6,25 @@ private struct GuideHostModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .environment(\.guideController, controller)
-            .backgroundPreferenceValue(GuideTargetKey.self) { anchors in
-                GeometryReader { proxy in
-                    let frames = anchors.mapValues { $0.map { proxy[$0] } }
-                    Color.clear
-                        .onChange(of: frames, initial: true) { _, new in
-                            controller.updateTargets(new)
-                        }
+            .overlayPreferenceValue(GuideTargetKey.self) { anchors in
+                GeometryReader { outer in
+                    // Frames resolve in this reader, so the overlay inside it shares their coordinate space.
+                    // It ignores the container safe area so the dim reaches the screen edges.
+                    GeometryReader { proxy in
+                        let frames = anchors.mapValues { $0.map { proxy[$0] } }
+                        SpotlightOverlay(controller: controller, safeArea: outer.safeAreaInsets)
+                            .onChange(of: frames, initial: true) { _, new in
+                                controller.updateTargets(new)
+                            }
+                    }
+                    .ignoresSafeArea(.container)
                 }
-                .allowsHitTesting(false)
             }
     }
 }
 
 extension View {
-    /// Collects guide targets beneath this view and feeds their frames to `controller`.
+    /// Collects guide targets beneath this view, feeds their frames to `controller`, and draws the walkthrough UI.
     public func guideHost(_ controller: GuideController) -> some View {
         modifier(GuideHostModifier(controller: controller))
     }
