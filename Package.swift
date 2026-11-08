@@ -14,5 +14,6 @@ let package = Package(
         .target(name: "GuideKit", dependencies: ["GuideKitCore"], swiftSettings: [.swiftLanguageMode(.v5)]),
         .target(name: "GuideKitTesting", dependencies: ["GuideKit"], swiftSettings: [.swiftLanguageMode(.v5)]),
         .testTarget(name: "GuideKitCoreTests", dependencies: ["GuideKitCore"], swiftSettings: [.swiftLanguageMode(.v5)]),
+        .testTarget(name: "GuideKitTests", dependencies: ["GuideKit"], swiftSettings: [.swiftLanguageMode(.v5)]),
     ]
 )
