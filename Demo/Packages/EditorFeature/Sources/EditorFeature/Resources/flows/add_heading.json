@@ -1,0 +1,8 @@
+{
+  "id": "editor.add_heading",
+  "title": "Add a heading",
+  "steps": [
+    { "target": "editor.add_block_button", "say": "Tap + to add a block.", "completeWhen": { "targetVisible": "editor.block_menu_heading" } },
+    { "target": "editor.block_menu_heading", "say": "Choose Heading.", "completeWhen": { "fact": "editor.heading.count", "increasedBy": 1 } }
+  ]
+}

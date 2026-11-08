@@ -1,0 +1,8 @@
+{
+  "id": "editor.turn_into_toggle",
+  "title": "Turn a block into a toggle",
+  "steps": [
+    { "target": "editor.block_handle", "pick": "last", "say": "Tap the handle on the last block.", "completeWhen": { "targetVisible": "editor.turn_into_toggle" } },
+    { "target": "editor.turn_into_toggle", "say": "Choose Toggle.", "completeWhen": { "fact": "editor.toggle.count", "increasedBy": 1 } }
+  ]
+}

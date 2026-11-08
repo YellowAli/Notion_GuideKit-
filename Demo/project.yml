@@ -1,0 +1,40 @@
+name: GuideDemo
+options:
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+packages:
+  GuideKit:
+    path: ..
+  DesignSystem:
+    path: Packages/DesignSystem
+  EditorFeature:
+    path: Packages/EditorFeature
+targets:
+  GuideDemo:
+    type: application
+    platform: iOS
+    sources: [GuideDemo]
+    dependencies:
+      - package: GuideKit
+        product: GuideKit
+      - package: DesignSystem
+      - package: EditorFeature
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.GuideDemo
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGN_IDENTITY: ""
+schemes:
+  GuideDemo:
+    build:
+      targets:
+        GuideDemo: all
+    run:
+      config: Debug
+    test:
+      config: Debug

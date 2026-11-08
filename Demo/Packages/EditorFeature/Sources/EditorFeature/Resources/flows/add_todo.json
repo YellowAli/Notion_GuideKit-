@@ -1,0 +1,8 @@
+{
+  "id": "editor.add_todo",
+  "title": "Add a to-do",
+  "steps": [
+    { "target": "editor.add_block_button", "say": "Tap + to add a block.", "completeWhen": { "targetVisible": "editor.block_menu_todo" } },
+    { "target": "editor.block_menu_todo", "say": "Choose To-do.", "completeWhen": { "fact": "editor.todo.count", "increasedBy": 1 } }
+  ]
+}
