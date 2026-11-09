@@ -10,6 +10,8 @@ packages:
     path: Packages/DesignSystem
   EditorFeature:
     path: Packages/EditorFeature
+  CalendarFeature:
+    path: Packages/CalendarFeature
 targets:
   GuideDemo:
     type: application
@@ -20,6 +22,7 @@ targets:
         product: GuideKit
       - package: DesignSystem
       - package: EditorFeature
+      - package: CalendarFeature
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.example.GuideDemo

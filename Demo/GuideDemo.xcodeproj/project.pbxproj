@@ -13,6 +13,7 @@
 		7FF4DE6FF5B31D25E1DBB8C0 /* EditorFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 3806D58FE22DD0F9BF36DABA /* EditorFeature */; };
 		9A5158CD96F46E752D59074D /* GuideKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3CBBC245B3F52C91EECEC0A8 /* GuideKit */; };
 		B5CE6FB66D0490102D035BE0 /* GuideKitTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 11DC35516CB92B2961C48084 /* GuideKitTesting */; };
+		F0744430F5499550F7257A0B /* CalendarFeature in Frameworks */ = {isa = PBXBuildFile; productRef = F58C212981B6E8D1F2C29BB8 /* CalendarFeature */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +34,7 @@
 		814C27A433C92970E5D102B4 /* EditorFeature */ = {isa = PBXFileReference; lastKnownFileType = folder; name = EditorFeature; path = Packages/EditorFeature; sourceTree = SOURCE_ROOT; };
 		C75B263FC9B3B8AE2E588C2E /* GuideDemoUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = GuideDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF1D6E41726027C85212D4D3 /* Notion_GuideKit- */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Notion_GuideKit-"; path = ..; sourceTree = SOURCE_ROOT; };
+		F82695FE8E5DC4955076946E /* CalendarFeature */ = {isa = PBXFileReference; lastKnownFileType = folder; name = CalendarFeature; path = Packages/CalendarFeature; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +45,7 @@
 				9A5158CD96F46E752D59074D /* GuideKit in Frameworks */,
 				6C12D2C4D042FFF40B125972 /* DesignSystem in Frameworks */,
 				7FF4DE6FF5B31D25E1DBB8C0 /* EditorFeature in Frameworks */,
+				F0744430F5499550F7257A0B /* CalendarFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +80,7 @@
 		4AF7CD5633325149CA506736 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
+				F82695FE8E5DC4955076946E /* CalendarFeature */,
 				0DCE7ED1A14D0EB4E32400A5 /* DesignSystem */,
 				814C27A433C92970E5D102B4 /* EditorFeature */,
 				CF1D6E41726027C85212D4D3 /* Notion_GuideKit- */,
@@ -121,6 +125,7 @@
 				3CBBC245B3F52C91EECEC0A8 /* GuideKit */,
 				37B849E570C18902CA393D93 /* DesignSystem */,
 				3806D58FE22DD0F9BF36DABA /* EditorFeature */,
+				F58C212981B6E8D1F2C29BB8 /* CalendarFeature */,
 			);
 			productName = GuideDemo;
 			productReference = 71C4B2F7B373504FDA5DE369 /* GuideDemo.app */;
@@ -170,6 +175,7 @@
 			mainGroup = 5F6007A104F104BDF9ED406E;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				D0169F2F1BA260A921448952 /* XCLocalSwiftPackageReference "Packages/CalendarFeature" */,
 				6C175F9F687F0D64907BED7F /* XCLocalSwiftPackageReference "Packages/DesignSystem" */,
 				B7E12392CB7575DEB17CF06F /* XCLocalSwiftPackageReference "Packages/EditorFeature" */,
 				EDACFCAC735542F54E5208A2 /* XCLocalSwiftPackageReference ".." */,
@@ -453,6 +459,10 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/EditorFeature;
 		};
+		D0169F2F1BA260A921448952 /* XCLocalSwiftPackageReference "Packages/CalendarFeature" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/CalendarFeature;
+		};
 		EDACFCAC735542F54E5208A2 /* XCLocalSwiftPackageReference ".." */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ..;
@@ -475,6 +485,10 @@
 		3CBBC245B3F52C91EECEC0A8 /* GuideKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GuideKit;
+		};
+		F58C212981B6E8D1F2C29BB8 /* CalendarFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CalendarFeature;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

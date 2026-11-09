@@ -1,14 +1,25 @@
 import SwiftUI
+import CalendarFeature
 import DesignSystem
 import EditorFeature
 import GuideKit
 
 enum DemoTab: String, CaseIterable, Identifiable {
-    case editor
+    case editor, calendar
 
     var id: String { rawValue }
-    var title: String { "Editor" }
-    var systemImage: String { "doc.text" }
+    var title: String {
+        switch self {
+        case .editor: "Editor"
+        case .calendar: "Calendar"
+        }
+    }
+    var systemImage: String {
+        switch self {
+        case .editor: "doc.text"
+        case .calendar: "calendar"
+        }
+    }
 }
 
 @MainActor @Observable
@@ -26,6 +37,7 @@ struct GuideDemoApp: App {
         _shell = State(initialValue: shell)
         _controller = State(initialValue: GuideController(features: [
             EditorGuide.feature(prepare: { shell.selectedTab = .editor }),
+            CalendarGuide.feature(prepare: { shell.selectedTab = .calendar }),
         ]))
     }
 
@@ -47,6 +59,7 @@ struct AppShell: View {
             Group {
                 switch shell.selectedTab {
                 case .editor: EditorView()
+                case .calendar: CalendarView()
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
