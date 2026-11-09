@@ -39,4 +39,13 @@ final class BlockStoreTests: XCTestCase {
         XCTAssertEqual(feature.flows.map(\.id),
                        ["editor.add_heading", "editor.add_todo", "editor.find_share", "editor.turn_into_toggle"])
     }
+
+    func testCloseMenusClearsMenuAndPanel() {
+        let store = BlockStore()
+        store.menuOpen = true
+        store.turnIntoBlock = store.blocks[0].id
+        store.closeMenus()
+        XCTAssertFalse(store.menuOpen)
+        XCTAssertNil(store.turnIntoBlock)
+    }
 }

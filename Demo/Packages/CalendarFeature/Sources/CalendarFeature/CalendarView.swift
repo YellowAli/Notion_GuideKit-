@@ -3,11 +3,13 @@ import DesignSystem
 import GuideKit
 
 public struct CalendarView: View {
-    @State private var store = EventStore()
+    private let store: EventStore
     @State private var showForm = false
     @State private var title = EventStore.defaultTitle
 
-    public init() {}
+    public init(store: EventStore) {
+        self.store = store
+    }
 
     public var body: some View {
         VStack(spacing: 0) {

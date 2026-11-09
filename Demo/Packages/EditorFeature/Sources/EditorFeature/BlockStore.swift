@@ -26,7 +26,17 @@ public final class BlockStore {
         Block(kind: .text, text: "Press + to add a block."),
     ]
 
+    /// The block menu, and the turn-into panel's block. Kept here so a walkthrough can reset them.
+    public var menuOpen = false
+    public var turnIntoBlock: Block.ID?
+
     public init() {}
+
+    /// Closes the block menu and any turn-into panel, so a walkthrough begins from a known state.
+    public func closeMenus() {
+        menuOpen = false
+        turnIntoBlock = nil
+    }
 
     public func count(of kind: BlockKind) -> Int {
         blocks.filter { $0.kind == kind }.count

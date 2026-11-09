@@ -25,6 +25,9 @@ enum DemoTab: String, CaseIterable, Identifiable {
 @MainActor @Observable
 final class ShellModel {
     var selectedTab: DemoTab = .editor
+    /// Owned here so content survives switching tabs, while only the visible screen stays mounted.
+    let blocks = BlockStore()
+    let events = EventStore()
 }
 
 @main
@@ -36,7 +39,10 @@ struct GuideDemoApp: App {
         let shell = ShellModel()
         _shell = State(initialValue: shell)
         _controller = State(initialValue: GuideController(features: [
-            EditorGuide.feature(prepare: { shell.selectedTab = .editor }),
+            EditorGuide.feature(prepare: {
+                shell.selectedTab = .editor
+                shell.blocks.closeMenus()
+            }),
             CalendarGuide.feature(prepare: { shell.selectedTab = .calendar }),
         ]))
     }
@@ -59,8 +65,8 @@ struct AppShell: View {
         VStack(spacing: 0) {
             Group {
                 switch shell.selectedTab {
-                case .editor: EditorView()
-                case .calendar: CalendarView()
+                case .editor: EditorView(store: shell.blocks)
+                case .calendar: CalendarView(store: shell.events)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)

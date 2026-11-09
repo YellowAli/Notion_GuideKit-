@@ -84,6 +84,63 @@ final class AllFlowsUITests: XCTestCase {
         waitForCount(of: events, toEqual: 2)
     }
 
+    func testBlockSurvivesSwitchingTabs() {
+        let app = launch(flowID: nil)
+        waitForStatus(in: app, state: "idle")
+        addBlock("editor.block_menu_todo", in: app)
+        let todo = element("editor.block.todo", in: app)
+        XCTAssertTrue(todo.waitForExistence(timeout: timeout))
+
+        tapTab("calendar", in: app)
+        XCTAssertTrue(element("calendar.new_event", in: app).waitForExistence(timeout: timeout))
+        tapTab("editor", in: app)
+
+        XCTAssertTrue(element("editor.add_block_button", in: app).waitForExistence(timeout: timeout))
+        XCTAssertTrue(todo.waitForExistence(timeout: timeout), "The added block was lost when switching tabs.")
+    }
+
+    func testFlowStartedWithBlockMenuOpenCompletes() {
+        let app = launch(flowID: nil)
+        waitForStatus(in: app, state: "idle")
+
+        let plus = element("editor.add_block_button", in: app)
+        XCTAssertTrue(plus.waitForExistence(timeout: timeout))
+        tapCenter(of: plus)
+        let todoItem = element("editor.block_menu_todo", in: app)
+        XCTAssertTrue(todoItem.waitForExistence(timeout: timeout))
+
+        startFromMenu("editor.add_todo", in: app)
+        waitForStatus(in: app, state: "waiting", flowID: "editor.add_todo", stepIndex: 0)
+        waitForAbsence(of: todoItem)
+
+        tapCenter(of: plus)
+        waitForStatus(in: app, state: "waiting", flowID: "editor.add_todo", stepIndex: 1)
+        XCTAssertTrue(todoItem.waitForExistence(timeout: timeout))
+        tapCenter(of: todoItem)
+        waitForStatus(in: app, state: "completed", flowID: "editor.add_todo")
+    }
+
+    func testFlowStartedWithTurnIntoPanelOpenCompletes() {
+        let app = launch(flowID: nil)
+        waitForStatus(in: app, state: "idle")
+
+        let handle = element("editor.block_handle", in: app)
+        XCTAssertTrue(handle.waitForExistence(timeout: timeout))
+        tapCenter(of: handle)
+        let toggleItem = element("editor.turn_into_toggle", in: app)
+        XCTAssertTrue(toggleItem.waitForExistence(timeout: timeout))
+
+        startFromMenu("editor.turn_into_toggle", in: app)
+        waitForStatus(in: app, state: "waiting", flowID: "editor.turn_into_toggle", stepIndex: 0)
+        waitForAbsence(of: toggleItem)
+
+        tapCenter(of: handle)
+        waitForStatus(in: app, state: "waiting", flowID: "editor.turn_into_toggle", stepIndex: 1)
+        XCTAssertTrue(toggleItem.waitForExistence(timeout: timeout))
+        tapCenter(of: toggleItem)
+        waitForStatus(in: app, state: "completed", flowID: "editor.turn_into_toggle")
+    }
+
     // MARK: - Helpers
 
     private func launch(flowID: String?) -> XCUIApplication {
@@ -109,6 +166,30 @@ final class AllFlowsUITests: XCTestCase {
         let expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "count == %d", count), object: query)
         XCTAssertEqual(XCTWaiter().wait(for: [expectation], timeout: timeout), .completed,
                        "Expected \(count) matches, found \(query.count)", file: file, line: line)
+    }
+
+    private func addBlock(_ menuItem: String, in app: XCUIApplication) {
+        let plus = element("editor.add_block_button", in: app)
+        XCTAssertTrue(plus.waitForExistence(timeout: timeout))
+        tapCenter(of: plus)
+        let item = element(menuItem, in: app)
+        XCTAssertTrue(item.waitForExistence(timeout: timeout))
+        tapCenter(of: item)
+    }
+
+    private func startFromMenu(_ flowID: String, in app: XCUIApplication) {
+        let openMenu = element("guide.open_menu", in: app)
+        XCTAssertTrue(openMenu.waitForExistence(timeout: timeout))
+        openMenu.tap()
+        let item = element("guide.menu.\(flowID)", in: app)
+        XCTAssertTrue(item.waitForExistence(timeout: timeout))
+        item.tap()
+    }
+
+    private func waitForAbsence(of element: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
+        let gone = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: element)
+        XCTAssertEqual(XCTWaiter().wait(for: [gone], timeout: timeout), .completed,
+                       "\(element) should have gone away.", file: file, line: line)
     }
 
     private func tapCenter(of element: XCUIElement) {

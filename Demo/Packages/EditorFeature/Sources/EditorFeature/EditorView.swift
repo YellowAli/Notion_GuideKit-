@@ -3,12 +3,12 @@ import DesignSystem
 import GuideKit
 
 public struct EditorView: View {
-    @State private var store = BlockStore()
-    @State private var menuOpen = false
-    @State private var turnIntoBlock: Block.ID?
+    @Bindable private var store: BlockStore
     @State private var showShared = false
 
-    public init() {}
+    public init(store: BlockStore) {
+        self.store = store
+    }
 
     public var body: some View {
         VStack(spacing: 0) {
@@ -18,12 +18,12 @@ public struct EditorView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     ForEach($store.blocks) { $block in
                         blockRow($block)
-                        if turnIntoBlock == block.id { turnIntoPanel(for: block.id) }
+                        if store.turnIntoBlock == block.id { turnIntoPanel(for: block.id) }
                     }
                 }
                 .padding(.vertical, 16)
             }
-            if menuOpen { blockMenu }
+            if store.menuOpen { blockMenu }
             Hairline()
             toolbar
         }
@@ -57,8 +57,8 @@ public struct EditorView: View {
     private var toolbar: some View {
         HStack {
             AppButton("", systemImage: "plus", guideID: "editor.add_block_button") {
-                turnIntoBlock = nil
-                menuOpen.toggle()
+                store.turnIntoBlock = nil
+                store.menuOpen.toggle()
             }
             Spacer()
         }
@@ -92,12 +92,12 @@ public struct EditorView: View {
 
     private func add(_ kind: BlockKind) {
         store.add(kind)
-        menuOpen = false
+        store.menuOpen = false
     }
 
     private func turnInto(_ kind: BlockKind, id: Block.ID) {
         store.turnInto(kind, id: id)
-        turnIntoBlock = nil
+        store.turnIntoBlock = nil
     }
 
     // MARK: - Blocks
@@ -124,11 +124,12 @@ public struct EditorView: View {
                 .font(font(kind))
                 .foregroundStyle(kind == .todo && block.isOn.wrappedValue ? Theme.secondary : Theme.ink)
                 .strikethrough(kind == .todo && block.isOn.wrappedValue)
+                .accessibilityIdentifier("editor.block.\(kind.rawValue)")
             if kind != .title {
                 AppButton("", systemImage: "ellipsis", guideID: "editor.block_handle") {
-                    menuOpen = false
+                    store.menuOpen = false
                     let id = block.wrappedValue.id
-                    turnIntoBlock = turnIntoBlock == id ? nil : id
+                    store.turnIntoBlock = store.turnIntoBlock == id ? nil : id
                 }
             }
         }
