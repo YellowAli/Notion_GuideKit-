@@ -6,9 +6,9 @@ Connect SwiftUI to the runtime: turn view frames, facts and taps into events, an
 
 ## Where it lives
 
-- `Sources/GuideKit/Controller/`: `GuideController.swift`, `GuidePresentation.swift`, `GuideStatus.swift`
-- `Sources/GuideKit/Modifiers/`: `GuideTarget.swift`, `GuideFact.swift`, `GuideFactConvertible.swift`, `GuideControllerEnvironment.swift`, `GuideHost.swift`
-- `Sources/GuideKit/Testing/`: `GuideTestEnvironment.swift`, `GuideStatusElement.swift`
+- `Sources/GuideKit/GuideController.swift`: `GuideController`, `GuidePresentation`
+- `Sources/GuideKit/GuideTarget.swift`, `GuideFact.swift` (with `GuideFactConvertible`), `GuideHost.swift` (with the environment key)
+- `Sources/GuideKit/GuideStatus.swift`: `GuideStatus`, plus the test-only status element and environment switches
 
 ## How it works
 
@@ -40,4 +40,4 @@ Connect SwiftUI to the runtime: turn view frames, facts and taps into events, an
 
 ## Tests
 
-`Tests/GuideKitTests/Controller/GuideControllerTests.swift`: features and duplicates, `prepare` ordering, `pick`, frame clearing, injected-sleep timeout, status, observability, stale facts.
+`Tests/GuideKitTests/GuideControllerTests.swift`: features and duplicates, `prepare` ordering, `pick`, frame clearing, injected-sleep timeout, status, observability, stale facts.

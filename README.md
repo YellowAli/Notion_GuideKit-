@@ -66,7 +66,7 @@ public enum CalendarGuide {
 }
 ```
 
-The app creates one controller from every team's feature, and one host at the root (`Demo/GuideDemo/App/GuideDemoApp.swift`):
+The app creates one controller from every team's feature, and one host at the root (`Demo/GuideDemo/GuideDemoApp.swift`):
 
 ```swift
 _controller = State(initialValue: GuideController(features: [

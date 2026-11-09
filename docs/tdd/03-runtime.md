@@ -6,7 +6,7 @@ Decide, from a stream of events, when each step is complete or has failed. It is
 
 ## Where it lives
 
-`Sources/GuideKitCore/Runtime/`: `GuideRuntime.swift`, `GuideEvent.swift`, `GuideEffect.swift`, `GuideState.swift`, `GuideFailure.swift`.
+`Sources/GuideKitCore/GuideRuntime.swift` holds the rules. `GuideRuntimeTypes.swift` beside it holds `GuideEvent`, `GuideEffect`, `GuideState`, and `GuideFailure`.
 
 ## How it works
 
@@ -71,4 +71,4 @@ Timers cannot be recalled once scheduled. Each `scheduleTimeout` carries a new t
 
 ## Tests
 
-`Tests/GuideKitCoreTests/Runtime/GuideRuntimeTests.swift` covers the happy path, each check, baselines, arming, every timer row above, stale tokens, wrong fact types and failure text.
+`Tests/GuideKitCoreTests/GuideRuntimeTests.swift` covers the happy path, each check, baselines, arming, every timer row above, stale tokens, wrong fact types and failure text.

@@ -6,7 +6,7 @@ Run every registered walkthrough as an automated UI test, so a stale flow fails 
 
 ## Where it lives
 
-`Sources/GuideKitTesting/FlowTestDriver.swift` (iOS only), the status element in `Sources/GuideKit/Testing/`, `GuideStatus` in `Sources/GuideKit/Controller/`, and the app's tests in `Demo/GuideDemoUITests/AllFlowsUITests.swift`.
+`Sources/GuideKitTesting/FlowTestDriver.swift` (iOS only), the status element in `Sources/GuideKit/GuideStatus.swift`, `GuideStatus` in the same file, and the app's tests in `Demo/GuideDemoUITests/AllFlowsUITests.swift`.
 
 ## How it works
 

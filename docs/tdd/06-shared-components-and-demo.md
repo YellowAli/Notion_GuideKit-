@@ -6,10 +6,10 @@ Show that separate teams can adopt GuideKit with no changes to the library, and 
 
 ## Where it lives
 
-- `Demo/Packages/DesignSystem/Sources/DesignSystem/`: `Theme/Theme.swift`, `Components/AppButton.swift`, `AppMenuRow.swift`, `Hairline.swift`
-- `Demo/Packages/EditorFeature/Sources/EditorFeature/`: `Model/`, `Views/`, `Guide/EditorGuide.swift`, `Resources/flows/`
+- `Demo/Packages/DesignSystem/Sources/DesignSystem/`: `Theme.swift` (with `Hairline`), `AppButton.swift`, `AppMenuRow.swift`
+- `Demo/Packages/EditorFeature/Sources/EditorFeature/`: `BlockStore.swift`, `EditorView.swift`, `EditorGuide.swift`, `Resources/flows/`
 - `Demo/Packages/CalendarFeature/Sources/CalendarFeature/`: same shape
-- `Demo/GuideDemo/`: `App/GuideDemoApp.swift`, `Shell/` (`ShellModel`, `DemoTab`, `AppShell`)
+- `Demo/GuideDemo/`: `GuideDemoApp.swift`, `AppShell.swift` (with `ShellModel` and `DemoTab`)
 - `Demo/project.yml` (XcodeGen source of `Demo/GuideDemo.xcodeproj`)
 
 ## How it works

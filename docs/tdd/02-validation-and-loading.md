@@ -6,8 +6,8 @@ Get flows from a feature's bundle into the app, rejecting structural mistakes ea
 
 ## Where it lives
 
-- `Sources/GuideKitCore/Validation/FlowValidator.swift` (`FlowValidator`, `FlowValidationError`)
-- `Sources/GuideKit/Registration/GuideFeature.swift`
+- `Sources/GuideKitCore/FlowValidator.swift` (`FlowValidator`, `FlowValidationError`)
+- `Sources/GuideKit/GuideFeature.swift`
 
 ## How it works
 
@@ -34,4 +34,4 @@ Get flows from a feature's bundle into the app, rejecting structural mistakes ea
 
 ## Tests
 
-`Tests/GuideKitCoreTests/Validation/FlowValidatorTests.swift` (each error class, all errors reported, one-based step text). Load behavior is covered in `Tests/GuideKitTests/Controller/GuideControllerTests.swift` (valid flows kept when another file is malformed, duplicate IDs, missing folder).
+`Tests/GuideKitCoreTests/FlowValidatorTests.swift` (each error class, all errors reported, one-based step text). Load behavior is covered in `Tests/GuideKitTests/GuideControllerTests.swift` (valid flows kept when another file is malformed, duplicate IDs, missing folder).

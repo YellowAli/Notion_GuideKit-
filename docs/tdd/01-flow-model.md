@@ -6,7 +6,7 @@ Define a walkthrough as plain, serializable data: what to point at, what to say,
 
 ## Where it lives
 
-`Sources/GuideKitCore/Model/`: `Flow.swift`, `Step.swift`, `Check.swift`, `FactValue.swift`, `Pick.swift`.
+`Sources/GuideKitCore/Flow.swift` holds `Flow`, `Step`, `Pick`, `Check`, and `FactValue`.
 
 ## How it works
 
@@ -31,4 +31,4 @@ Define a walkthrough as plain, serializable data: what to point at, what to say,
 
 ## Tests
 
-`Tests/GuideKitCoreTests/Model/FlowDecodingTests.swift`: all four checks decode, `pick` defaults to `first`, unknown check throws, round trip.
+`Tests/GuideKitCoreTests/FlowDecodingTests.swift`: all four checks decode, `pick` defaults to `first`, unknown check throws, round trip.

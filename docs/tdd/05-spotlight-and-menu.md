@@ -6,7 +6,7 @@ Show the person where to act: dim everything except the target, explain the step
 
 ## Where it lives
 
-`Sources/GuideKit/Overlay/SpotlightOverlay.swift`, `Sources/GuideKit/Overlay/TooltipPlacement.swift`, `Sources/GuideKit/Menu/GuideMenu.swift`.
+`Sources/GuideKit/SpotlightOverlay.swift`, `Sources/GuideKit/SpotlightOverlay.swift`, `Sources/GuideKit/GuideMenu.swift`.
 
 ## How it works
 
@@ -33,4 +33,4 @@ Show the person where to act: dim everything except the target, explain the step
 
 ## Tests
 
-`Tests/GuideKitTests/Overlay/TooltipPlacementTests.swift` (8 placement cases). UI tests in `Demo/GuideDemoUITests/AllFlowsUITests.swift`: `testTapOutsideHoleIsBlocked`, `testExitEndsWalkthrough`, `testMenuStartsWalkthrough`.
+`Tests/GuideKitTests/TooltipPlacementTests.swift` (8 placement cases). UI tests in `Demo/GuideDemoUITests/AllFlowsUITests.swift`: `testTapOutsideHoleIsBlocked`, `testExitEndsWalkthrough`, `testMenuStartsWalkthrough`.
