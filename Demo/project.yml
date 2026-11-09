@@ -1,0 +1,59 @@
+name: GuideDemo
+options:
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+packages:
+  GuideKit:
+    path: ..
+  DesignSystem:
+    path: Packages/DesignSystem
+  EditorFeature:
+    path: Packages/EditorFeature
+  CalendarFeature:
+    path: Packages/CalendarFeature
+targets:
+  GuideDemo:
+    type: application
+    platform: iOS
+    sources: [GuideDemo]
+    dependencies:
+      - package: GuideKit
+        product: GuideKit
+      - package: DesignSystem
+      - package: EditorFeature
+      - package: CalendarFeature
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.GuideDemo
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGN_IDENTITY: ""
+  GuideDemoUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [GuideDemoUITests]
+    dependencies:
+      - target: GuideDemo
+      - package: GuideKit
+        product: GuideKitTesting
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.GuideDemoUITests
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGN_IDENTITY: ""
+schemes:
+  GuideDemo:
+    build:
+      targets:
+        GuideDemo: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets: [GuideDemoUITests]

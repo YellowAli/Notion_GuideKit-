@@ -1,0 +1,8 @@
+{
+  "id": "calendar.create_event",
+  "title": "Create an event",
+  "steps": [
+    { "target": "calendar.new_event", "say": "Tap New event.", "completeWhen": { "targetVisible": "calendar.save" } },
+    { "target": "calendar.save", "say": "Tap Save to add the event.", "completeWhen": { "fact": "calendar.event.count", "increasedBy": 1 } }
+  ]
+}

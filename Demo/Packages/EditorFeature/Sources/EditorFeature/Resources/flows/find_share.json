@@ -1,0 +1,7 @@
+{
+  "id": "editor.find_share",
+  "title": "Find the share button",
+  "steps": [
+    { "target": "editor.share_button", "say": "Tap Share to share this page.", "completeWhen": { "tapped": true } }
+  ]
+}
