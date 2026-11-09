@@ -3,6 +3,8 @@ import CalendarFeature
 import GuideKit
 import SwiftUI
 
+/// Builds one `GuideController` from both teams' features and attaches the single `guideHost`.
+/// Design: docs/tdd/06-shared-components-and-demo.md
 @main
 struct GuideDemoApp: App {
     @State private var shell: ShellModel

@@ -2,12 +2,22 @@ import SwiftUI
 import GuideKit
 
 /// A quiet button. With an empty title and a `systemImage` it is an icon-only button.
+///
+/// Forwards `guideID` to `guideTarget`, so product code tags a control without importing GuideKit views.
+/// Design: docs/tdd/06-shared-components-and-demo.md
 public struct AppButton: View {
     private let title: String
     private let systemImage: String?
     private let guideID: String?
     private let action: () -> Void
 
+    /// Creates a button.
+    ///
+    /// - Parameters:
+    ///   - title: The label. Pass an empty string for an icon-only button.
+    ///   - systemImage: An SF Symbol name shown before the title.
+    ///   - guideID: A guide target ID for walkthroughs, forwarded to `guideTarget(_:)`. `nil` makes the button untagged.
+    ///   - action: Runs when the button is tapped.
     public init(_ title: String, systemImage: String? = nil, guideID: String? = nil, action: @escaping () -> Void) {
         self.title = title
         self.systemImage = systemImage
@@ -15,6 +25,7 @@ public struct AppButton: View {
         self.action = action
     }
 
+    /// The button's content.
     public var body: some View {
         Button(action: action) {
             HStack(spacing: 6) {

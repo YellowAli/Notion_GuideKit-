@@ -2,8 +2,16 @@ import SwiftUI
 
 /// Dims the screen around the current step's target and blocks every touch outside the hole.
 ///
+/// The hole is the target's frame plus a little padding; taps inside it reach the real control, so the person
+/// performs the real action. Taps on the dim shake the card instead of doing anything. The tooltip's Exit button
+/// cancels the walkthrough, and each new step is announced to VoiceOver.
+///
 /// Must be laid out in the same coordinate space as the frames passed to
 /// `GuideController.updateTargets`. `safeArea` keeps the tooltip clear of the notch and home indicator.
+/// `GuideHost` creates it; apps do not use it directly.
+///
+/// Reads `GuideController.presentation`; places the card with `TooltipPlacement`.
+/// Design: docs/tdd/05-spotlight-and-menu.md
 struct SpotlightOverlay: View {
     let controller: GuideController
     var safeArea = EdgeInsets()

@@ -66,7 +66,7 @@ public enum CalendarGuide {
 }
 ```
 
-The app creates one controller from every team's feature, and one host at the root (`GuideDemoApp.swift`):
+The app creates one controller from every team's feature, and one host at the root (`Demo/GuideDemo/App/GuideDemoApp.swift`):
 
 ```swift
 _controller = State(initialValue: GuideController(features: [
@@ -122,6 +122,10 @@ func testEveryRegisteredFlowCompletes() {
 ```
 
 A new flow is covered by this test as soon as its JSON file exists. It needs no new test code.
+
+## Documentation
+
+Every public type and member carries `///` documentation, and a DocC catalog lives at `Sources/GuideKit/GuideKit.docc/` (a landing page and a Getting Started article built from the demo code). To build it in Xcode, open the package and choose Product > Build Documentation.
 
 ## Regression demo
 

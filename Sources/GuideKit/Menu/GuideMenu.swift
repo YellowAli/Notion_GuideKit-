@@ -1,6 +1,14 @@
 import SwiftUI
 
 /// The idle-state walkthrough UI: a floating button, the list of flows, and the failure card.
+///
+/// The `?` launcher hides while a walkthrough is showing. When a walkthrough fails, a card tells the
+/// person it could not continue; the specific reason is printed in debug builds and kept in
+/// `GuideController.status`. `bottomClearance` is the host's `launcherBottomClearance`.
+/// `GuideHost` creates it; apps do not use it directly.
+///
+/// Lists `GuideController.flows` and calls `start(flowID:)`.
+/// Design: docs/tdd/05-spotlight-and-menu.md
 struct GuideMenu: View {
     let controller: GuideController
     let bottomClearance: CGFloat

@@ -1,6 +1,8 @@
 import GuideKitCore
 
+/// A Swift value that can be reported as a fact with `guideFact(_:value:)`. `Bool`, `Int` and `String` conform.
 public protocol GuideFactConvertible {
+    /// The value as a ``FactValue``.
     var guideFactValue: FactValue { get }
 }
 

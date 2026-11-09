@@ -1,6 +1,11 @@
 import SwiftUI
 
 /// Where the tooltip card may sit: always inside the safe screen area, and never so short that Exit is lost.
+///
+/// This is pure geometry, kept apart from `SpotlightOverlay` so it can be unit-tested. With no hole
+/// (the target is not on screen) the card may use the whole safe area.
+///
+/// Design: docs/tdd/05-spotlight-and-menu.md
 struct TooltipPlacement: Equatable {
     /// Enough for the Exit row plus some message, even at large text sizes.
     static let minimumHeight: CGFloat = 160

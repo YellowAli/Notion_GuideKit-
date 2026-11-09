@@ -1,20 +1,50 @@
 import Foundation
 
 /// Pure reducer deciding when each walkthrough step is complete.
+/// A pure state machine that decides when each walkthrough step is complete.
+///
+/// It has no UI, clock or threading of its own: feed it ``GuideEvent`` values and it returns ``GuideEffect``
+/// values for the caller to perform. That makes every rule testable without a simulator.
+/// `GuideController` is the production caller; use the runtime directly only to test or embed it elsewhere.
+///
+/// ```swift
+/// var runtime = GuideRuntime()
+/// _ = runtime.handle(.start(flow, targets: ["calendar.new_event"], facts: [:]))
+/// _ = runtime.handle(.targetTapped("calendar.new_event"))
+/// ```
+///
+/// Sits between `GuideController` (sends events, performs effects) and the flow model it walks through.
+/// Design: docs/tdd/03-runtime.md
 public struct GuideRuntime {
+    /// The current state. It changes only inside ``handle(_:)``.
     public private(set) var state: GuideState = .idle
 
     private var targets: Set<String> = []
     private var facts: [String: FactValue] = [:]
+    /// For `factIncreased`: the value the fact had when the step began, or when it was first reported.
     private var baseline: Int?
+    /// Whether the check may complete the step. A check that is already true when the step appears (a menu
+    /// that is already open, a fact that already equals the goal) would skip the step before the person did
+    /// anything, so it starts disarmed. It arms when the person taps the target, or when a late-arriving
+    /// target is first shown and the check is not already true at that moment.
     private var armed = true
+    /// Whether the person has tapped the current step's target. After a tap, a missing result is a real
+    /// failure; before one, a missing target may just be slow to render.
     private var tapped = false
     private var lastToken = 0
-    /// The only token whose timeout is honored; nil when no timer is outstanding.
+    /// Identifies the one outstanding timer. Timers cannot be recalled once scheduled, so a stale timeout
+    /// (from a step already left, or a target that came back) is recognized by its old token and ignored.
+    /// nil when no timer is outstanding.
     private var activeToken: Int?
 
+    /// Creates an idle runtime.
     public init() {}
 
+    /// Applies one event and returns the effects the caller must perform, in order.
+    ///
+    /// - Parameters:
+    ///   - event: What just happened on screen.
+    /// - Returns: Effects to carry out. Empty when the event changed nothing.
     public mutating func handle(_ event: GuideEvent) -> [GuideEffect] {
         switch event {
         case .start(let flow, let targets, let facts):
@@ -101,6 +131,9 @@ public struct GuideRuntime {
 
     // MARK: - Private
 
+    /// Timers run in two situations only: a target is absent (on entering a step, or after it vanishes before
+    /// the tap), and after the person taps the target but the check has not yet passed. Each gives the UI
+    /// time to settle before the walkthrough is declared failed.
     private mutating func schedule() -> GuideEffect {
         lastToken += 1
         activeToken = lastToken

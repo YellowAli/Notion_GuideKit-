@@ -3,27 +3,61 @@ import XCTest
 import GuideKit
 
 /// Runs registered walkthroughs against the real app, tapping each step's target through the spotlight.
+/// Runs the app's registered walkthroughs as UI tests by tapping each step's target through the real UI.
+///
+/// Use it in a UI test target so every flow is exercised on each test run. A renamed or removed control makes the
+/// flow fail with a message naming the flow, step and target. The app under test must use `guideHost`; the driver
+/// launches it with `GUIDEKIT_TEST=1` so the host exposes its status, then follows that status step by step.
+///
+/// ```swift
+/// import XCTest
+/// import GuideKitTesting
+///
+/// final class AllFlowsUITests: XCTestCase {
+///     func testEveryRegisteredFlowCompletes() {
+///         FlowTestDriver(testCase: self).runAll()
+///     }
+/// }
+/// ```
+///
+/// Screenshots of each step are attached to the test results.
+///
+/// Reads `GuideStatus` from the app, taps each target, and lets the app's own runtime judge the result.
+/// Design: docs/tdd/07-test-driver.md
 @MainActor
 public struct FlowTestDriver {
     private let testCase: XCTestCase
     private let timeout: TimeInterval
 
+    /// Creates a driver.
+    ///
+    /// - Parameters:
+    ///   - testCase: The test case that receives failures and screenshot attachments.
+    ///   - timeout: How long, in seconds, to wait for the app to show a status, a target, or a change after a tap.
     public init(testCase: XCTestCase, timeout: TimeInterval = 10) {
         self.testCase = testCase
         self.timeout = timeout
     }
 
+    /// Launches the app and reads which flows it has registered.
+    ///
+    /// - Returns: Every registered flow ID, or an empty array if the app's status could not be read (the test also fails in that case).
     public func allFlowIDs() -> [String] {
         guard let snapshot = readStatus(in: launch(flowID: nil)) else { return [] }
         return snapshot.status.allFlowIDs
     }
 
+    /// Launches the app, starts one flow and taps through it until it completes. Fails the test if the flow fails or stalls.
+    ///
+    /// - Parameters:
+    ///   - flowID: The ID of a registered flow.
     public func run(flowID: String) {
         XCTContext.runActivity(named: "Flow \(flowID)") { _ in
             drive(flowID: flowID)
         }
     }
 
+    /// Runs every registered flow, one app launch each. Fails the test if no flows are registered.
     public func runAll() {
         let flowIDs = allFlowIDs()
         XCTAssertFalse(flowIDs.isEmpty, "No walkthroughs are registered with the host.")
@@ -43,6 +77,8 @@ public struct FlowTestDriver {
             snapshot = started
         }
 
+        // Loop: read status, tap the step's target, wait for the status to change. The app's runtime decides
+        // whether the tap completed the step; the driver never judges it.
         var lastStep = 1
         while true {
             let status = snapshot.status
