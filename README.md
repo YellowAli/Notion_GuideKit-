@@ -127,6 +127,8 @@ A new flow is covered by this test as soon as its JSON file exists. It needs no 
 
 Every public type and member carries `///` documentation, and a DocC catalog lives at `Sources/GuideKit/GuideKit.docc/` (a landing page and a Getting Started article built from the demo code). To build it in Xcode, open the package and choose Product > Build Documentation.
 
+For how it works and why it is built this way, start at [`docs/tdd/README.md`](docs/tdd/README.md): one technical design doc per feature, with a mental model, a diagram and an end-to-end trace.
+
 ## Regression demo
 
 I renamed the guide ID `editor.add_block_button` to `editor.add_block_button_renamed` in one place and ran the UI tests. This is the real output:
