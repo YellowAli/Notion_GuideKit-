@@ -47,6 +47,14 @@ AppButton("Save", guideID: "calendar.save") { ... }
 }
 ```
 
+Then declare the folder on the feature's target in `Package.swift`:
+
+```swift
+resources: [.copy("Resources/flows")]
+```
+
+It must be `.copy`. With `.process`, SwiftPM flattens the folder, GuideKit can't find `flows`, and the feature reports a load error.
+
 4. Wrap registration in the feature package. The `prepare` closure shows the right screen before a flow starts:
 
 ```swift
@@ -62,17 +70,20 @@ The app creates one controller from every team's feature, and one host at the ro
 
 ```swift
 _controller = State(initialValue: GuideController(features: [
-    EditorGuide.feature(prepare: { shell.selectedTab = .editor }),
+    EditorGuide.feature(prepare: {
+        shell.selectedTab = .editor
+        shell.blocks.closeMenus()
+    }),
     CalendarGuide.feature(prepare: { shell.selectedTab = .calendar }),
 ]))
 ```
 
 ```swift
 AppShell(shell: shell)
-    .guideHost(controller)
+    .guideHost(controller, launcherBottomClearance: 120)
 ```
 
-That is the whole adoption. The `?` button opens a menu of every registered flow. See `Demo/Packages/CalendarFeature/` for the real files.
+That is the whole adoption. The `?` button opens a menu of every registered flow. `launcherBottomClearance` is optional (84 points by default); raise it if the button would cover your bottom controls. A `prepare` closure should also reset any transient UI, such as an open menu, so a walkthrough begins from a known state. See `Demo/Packages/CalendarFeature/` for the real files.
 
 A step has a `target`, a `say` line, an optional `pick` (`first` or `last` when several views share an ID), and a `completeWhen` check. The checks are `targetVisible`, `fact` with `equals` or `increasedBy`, and `tapped`. Flow IDs must start with the feature's namespace, and the validator checks this at load.
 
@@ -101,8 +112,8 @@ The dim blocks taps outside the highlighted hole. Taps inside the hole reach the
 
 - A flow is data. `GuideRuntime` is a plain state machine, so it is unit-tested without a simulator.
 - `guideTarget` records a view's frame with an anchor preference and sets its accessibility identifier. The host collects the frames at the root.
-- If a step's target is not on screen within the timeout (5 seconds by default), the walkthrough fails and says which flow, step and target.
-- `FlowTestDriver` reads the same flow files, launches the app, taps each target on the real screen, and fails the test if a flow does not finish.
+- If a step's target is not rendered within 5 seconds (a fixed constant), the walkthrough fails and says which flow, step and target.
+- `FlowTestDriver` reads `allFlowIDs` from the app's status element, launches the app once per flow, and lets the app's own runtime drive it. It taps each step's current target on the real screen and fails the test if a flow does not finish.
 
 ```swift
 func testEveryRegisteredFlowCompletes() {
@@ -127,12 +138,16 @@ Each failure names the flow, the step and the target. The flows that did not use
 
 Run on iPhone 17 Simulator.
 
-- `swift test`: 55 tests, 0 failures (38 in `GuideKitCoreTests`, 17 in `GuideKitTests`).
-- `xcodebuild test`: 4 UI tests, 0 failures. `testEveryRegisteredFlowCompletes` ran all 5 flows (4 in Editor, 1 in Calendar) and saved a screenshot for each step.
+- `swift test` at the repo root: 59 tests, 0 failures (40 in `GuideKitCoreTests`, 19 in `GuideKitTests`).
+- `swift test` inside each demo package with tests: 6 in `Demo/Packages/EditorFeature`, 2 in `Demo/Packages/CalendarFeature`, 0 failures. `DesignSystem` has no test target.
+- `xcodebuild test`: 8 UI tests, 0 failures. `testEveryRegisteredFlowCompletes` ran all 5 flows (4 in Editor, 1 in Calendar) and saved a screenshot for each step.
 
 ```
 xcodebuild test -project Demo/GuideDemo.xcodeproj -scheme GuideDemo \
   -destination "platform=iOS Simulator,name=iPhone 17"
+
+(cd Demo/Packages/EditorFeature && swift test)
+(cd Demo/Packages/CalendarFeature && swift test)
 ```
 
 The demo has three packages: `DesignSystem` (shared `AppButton` and `AppMenuRow`, which take the optional `guideID`), `EditorFeature` and `CalendarFeature`. Calendar was added as an independent team package that only depends on `GuideKit` and `DesignSystem`.
@@ -156,6 +171,8 @@ The demo has three packages: `DesignSystem` (shared `AppButton` and `AppMenuRow`
 - VoiceOver can reach controls behind the dim.
 - `pick: last` is not exercised with several matches in a UI test. The demo has only one match at that point.
 - Rotation has not been verified.
+- Anchors are unverified through `TabView`, and `NavigationStack` is untested. Check both before adopting this in a real app; the demo uses a plain in-hierarchy tab bar.
+- VoiceOver activation may bypass the tap gesture, so `tapped` steps may not complete for VoiceOver users. This is unverified.
 - Any remaining web-based surface would need a different resolver, such as a DOM one. That is optional future work.
 
 ## Fit with Notion, from public reporting only
