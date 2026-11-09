@@ -77,24 +77,28 @@ public struct GuideRuntime {
             return [.dismiss]
 
         case .factsChanged(let facts):
-            guard case .waiting = state else { return [] }
+            guard case .waiting(let flow, let index) = state else { return [] }
             self.facts = facts
+            // A fact that went away has no meaningful baseline; the next report sets a new one.
+            if case .factIncreased(let key, _) = flow.steps[index].completeWhen, facts[key] == nil {
+                baseline = nil
+            }
             return evaluate(tapOnTarget: false)
 
         case .targetsChanged(let targets):
-            guard case .waiting = state else { return [] }
-            let wasPresent: Bool
-            if case .waiting(let flow, let index) = state {
-                wasPresent = self.targets.contains(flow.steps[index].target)
-            } else {
-                wasPresent = true
-            }
+            guard case .waiting(let flow, let index) = state else { return [] }
+            let step = flow.steps[index]
+            let wasPresent = self.targets.contains(step.target)
+            let isPresent = targets.contains(step.target)
             self.targets = targets
+            // A target arriving late is the first time the step is really shown, so judge "already true" now.
+            if !wasPresent && isPresent && !tapped {
+                armed = !isSatisfiedAtEntry(step.completeWhen)
+            }
             let before = state
             var effects = evaluate(tapOnTarget: false)
             // Before a tap, a vanishing target starts a timer and a returning one cancels it.
-            if state == before, case .waiting(let flow, let index) = state, !tapped {
-                let isPresent = targets.contains(flow.steps[index].target)
+            if state == before && !tapped {
                 if wasPresent && !isPresent {
                     effects.append(schedule())
                 } else if !wasPresent && isPresent {

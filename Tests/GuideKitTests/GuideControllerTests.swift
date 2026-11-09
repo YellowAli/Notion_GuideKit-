@@ -129,4 +129,16 @@ final class GuideControllerTests: XCTestCase {
         c.start(flowID: "t.dup")
         XCTAssertEqual(ran, ["first"])
     }
+
+    func testForgottenFactDoesNotBecomeStaleBaseline() {
+        let c = controller([flow(check: .factIncreased(key: "a.k", by: 1))])
+        c.reportFact("a.k", .int(2))
+        c.forgetFact("a.k")
+        c.updateTargets(["a.b": [.zero]])
+        c.start(flowID: "t.f")
+        c.reportFact("a.k", .int(0))
+        XCTAssertEqual(c.status.state, "waiting")
+        c.reportFact("a.k", .int(1))
+        XCTAssertEqual(c.status.state, "completed")
+    }
 }

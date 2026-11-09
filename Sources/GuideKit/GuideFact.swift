@@ -26,14 +26,15 @@ private struct GuideFactModifier: ViewModifier {
     let value: FactValue
 
     func body(content: Content) -> some View {
-        content.onChange(of: value, initial: true) { _, new in
-            controller?.reportFact(key, new)
-        }
+        content
+            .onAppear { controller?.reportFact(key, value) }
+            .onChange(of: value) { _, new in controller?.reportFact(key, new) }
+            .onDisappear { controller?.forgetFact(key) }
     }
 }
 
 extension View {
-    /// Reports `value` under `key` on appear and whenever it changes.
+    /// Reports `value` under `key` on appear and whenever it changes, and forgets it on disappear.
     public func guideFact(_ key: String, value: some GuideFactConvertible) -> some View {
         modifier(GuideFactModifier(key: key, value: value.guideFactValue))
     }

@@ -102,6 +102,12 @@ public final class GuideController {
         send(.factsChanged(facts))
     }
 
+    /// Drops a fact whose reporting view went away, so a stale value can't become a step's baseline.
+    public func forgetFact(_ key: String) {
+        facts[key] = nil
+        send(.factsChanged(facts))
+    }
+
     public func reportTap(_ id: String) { send(.targetTapped(id)) }
 
     // MARK: - Private

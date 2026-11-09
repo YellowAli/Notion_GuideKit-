@@ -214,4 +214,25 @@ final class GuideRuntimeTests: XCTestCase {
         XCTAssertEqual(GuideFailure.checkNotPassed(flowID: "f", step: 2).description,
                        "`f` step 3: completion check did not pass")
     }
+
+    func testCheckTrueWhenTargetArrivesWaitsForTap() {
+        var rt = GuideRuntime()
+        let s1 = step("a", .targetVisible("b")), s2 = step("c", .tapped)
+        let f = flow([s1, s2])
+        _ = rt.handle(.start(f, targets: [], facts: [:]))
+        XCTAssertEqual(rt.handle(.targetsChanged(["a", "b"])), [])
+        XCTAssertEqual(rt.state, .waiting(flow: f, step: 0))
+        XCTAssertEqual(rt.handle(.targetTapped("a")).first, .present(step: 1, s2))
+        XCTAssertEqual(rt.state, .waiting(flow: f, step: 1))
+    }
+
+    func testFactIncreasedResetsBaselineWhenFactGoesAwayMidStep() {
+        var rt = GuideRuntime()
+        let f = flow([step("a", .factIncreased(key: "n", by: 1))])
+        _ = rt.handle(.start(f, targets: ["a"], facts: ["n": .int(2)]))
+        XCTAssertEqual(rt.handle(.factsChanged([:])), [])
+        XCTAssertEqual(rt.handle(.factsChanged(["n": .int(0)])), [])
+        XCTAssertEqual(rt.handle(.factsChanged(["n": .int(1)])), [.dismiss])
+        XCTAssertEqual(rt.state, .completed(flowID: f.id))
+    }
 }
