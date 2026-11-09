@@ -2,8 +2,6 @@
 
 ![A GuideKit walkthrough: tap New event, tap Save, and the event appears](docs/demo.gif)
 
-*Unofficial concept demo, not affiliated with Notion.*
-
 GuideKit is a Swift library for in-app walkthroughs that are checked against the real UI. A team tags controls through its shared components and adds a JSON file. Every walkthrough then doubles as a UI test.
 
 The library is the point. The demo app only exists to exercise it. No LLM is used. Flows are plain data, which leaves that door open later.
@@ -123,44 +121,29 @@ func testEveryRegisteredFlowCompletes() {
 
 A new flow is covered by this test as soon as its JSON file exists. It needs no new test code.
 
+## How it was built
+
+I built this with Claude Code, using a process where I made the product decisions and independent agents built and checked the work.
+
+1. **I defined the problem and the solution.** The problem came from my club: people ask AI to do simple tasks in Notion and never learn how. I proposed a mode that walks you through a task on the real interface.
+2. **I used skills to work out the architecture.** Brainstorming and planning skills turned the idea into a design, and I pushed back on it as we went. That is where we dropped the LLM, removed a per-team manifest, and moved tagging into shared components. The result was a plan of nine tasks, each with exact interfaces and tests.
+3. **Subagents built and reviewed each task.** One agent implemented a task from its brief alone. A separate agent then reviewed the diff without that agent's context, so it had no attachment to the choices made and treated the implementer's report as unverified. Findings went back for a fix and a focused re-review before the next task started.
+4. **A final reviewer read the whole branch.** Reviewing tasks one at a time misses problems between them.
+
+The independent reviews caught bugs that the tests had not:
+
+- A timer from one step could fail the next step.
+- Status changes did not reach SwiftUI views.
+- Switching tabs erased the user's content.
+- The `?` button covered Calendar's Save button.
+- The project failed to build from a renamed folder, such as a GitHub ZIP download.
+
 ## Documentation
 
 Every public type and member carries `///` documentation, and a DocC catalog lives at `Sources/GuideKit/GuideKit.docc/` (a landing page and a Getting Started article built from the demo code). To build it in Xcode, open the package and choose Product > Build Documentation.
 
 For how it works and why it is built this way, start at [`docs/tdd/README.md`](docs/tdd/README.md): one technical design doc per feature, with a mental model, a diagram and an end-to-end trace.
 
-## Regression demo
-
-I renamed the guide ID `editor.add_block_button` to `editor.add_block_button_renamed` in one place and ran the UI tests. This is the real output:
-
-```
-failed - `editor.add_heading` step 1: target `editor.add_block_button` not found
-failed - `editor.add_todo` step 1: target `editor.add_block_button` not found
-```
-
-Each failure names the flow, the step and the target. The flows that did not use that target still passed, and the run kept going past the failures. I reverted the rename afterward.
-
-## Verification
-
-Run on iPhone 17 Simulator.
-
-- `swift test` at the repo root: 59 tests, 0 failures (40 in `GuideKitCoreTests`, 19 in `GuideKitTests`).
-- `swift test` inside each demo package with tests: 6 in `Demo/Packages/EditorFeature`, 2 in `Demo/Packages/CalendarFeature`, 0 failures. `DesignSystem` has no test target.
-- `xcodebuild test`: 8 UI tests, 0 failures. `testEveryRegisteredFlowCompletes` ran all 5 flows (4 in Editor, 1 in Calendar) and saved a screenshot for each step.
-
-```
-xcodebuild test -project Demo/GuideDemo.xcodeproj -scheme GuideDemo \
-  -destination "platform=iOS Simulator,name=iPhone 17"
-
-(cd Demo/Packages/EditorFeature && swift test)
-(cd Demo/Packages/CalendarFeature && swift test)
-```
-
-The demo has three packages: `DesignSystem` (shared `AppButton` and `AppMenuRow`, which take the optional `guideID`), `EditorFeature` and `CalendarFeature`. Calendar was added as an independent team package that only depends on `GuideKit` and `DesignSystem`.
-
-| Editor: add a to-do | Editor: find Share |
-| --- | --- |
-| ![Highlights the add block button](docs/screenshots/editor-add-todo-step1.png) | ![Highlights Share](docs/screenshots/editor-find-share.png) |
 
 ## Tradeoffs
 
@@ -169,26 +152,3 @@ The demo has three packages: `DesignSystem` (shared `AppButton` and `AppMenuRow`
 **Tags, not server-driven UI.** The screens stay ordinary SwiftUI. Nothing about the UI is described remotely, so teams keep their normal workflow. The cost is that flows ship with the app and cannot be changed without a release.
 
 **No manifest.** There is no central list of targets or flows. Each feature package carries its own `flows/` folder. This avoids a shared file that every team has to edit. The cost is that nothing checks IDs across teams. The only checks are the namespace rule and the UI test that runs every flow.
-
-## Limitations
-
-- Targets inside system sheets and popovers are not supported.
-- Off-screen targets are not scrolled into view.
-- VoiceOver can reach controls behind the dim.
-- `pick: last` is not exercised with several matches in a UI test. The demo has only one match at that point.
-- Rotation has not been verified.
-- Anchors are unverified through `TabView`, and `NavigationStack` is untested. Check both before adopting this in a real app; the demo uses a plain in-hierarchy tab bar.
-- VoiceOver activation may bypass the tap gesture, so `tapped` steps may not complete for VoiceOver users. This is unverified.
-- Any remaining web-based surface would need a different resolver, such as a DOM one. That is optional future work.
-
-## Fit with Notion, from public reporting only
-
-Apple's June 2026 piece (<https://developer.apple.com/news/?id=tejokjnx>) and MacRumors (<https://macrumors.com/2026/06/12/notion-is-migrating-to-swiftui>) say Notion is migrating its iOS UI to SwiftUI. The Pragmatic Engineer (<https://newsletter.pragmaticengineer.com/p/notion-going-native-on-ios-and-android>) covers its move from web-based to native. Public reporting describes the editor as the last part of that migration, so I do not know its current state. Any fit between this library and Notion is inferred from public reporting only. I have no knowledge of Notion's internals.
-
-## Requirements
-
-iOS 17, Swift 6 toolchain. Package products: `GuideKitCore`, `GuideKit`, `GuideKitTesting`.
-
----
-
-*Unofficial concept demo, not affiliated with Notion.*
