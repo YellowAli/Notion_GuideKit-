@@ -8,7 +8,9 @@ The library is the point. The demo app only exists to exercise it. No LLM is use
 
 ## The problem
 
-I run a student club where new people learn Notion. Many find it hard to learn. Asking an AI to do things for them gets the task done but teaches nothing.
+Many clubs I've been part of use Notion as their central hub, but most students find it hard to navigate at first. Despite Notion's benefits, members often give up quickly, or clubs switch to alternatives with fewer features.
+
+Notion's built-in connectors and AI help, but they don't teach you how to use the app. It also becomes tiresome to ask the AI for every task.
 
 An in-app walkthrough teaches: it points at the real control and waits for the person to tap it. The usual problem is that walkthroughs rot. A button gets renamed, the tour points at nothing, and nobody notices until a user does.
 
