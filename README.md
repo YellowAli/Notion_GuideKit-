@@ -47,17 +47,29 @@ AppButton("Save", guideID: "calendar.save") { ... }
 }
 ```
 
-4. Register the feature. The `prepare` closure shows the right screen before a flow starts:
+4. Wrap registration in the feature package. The `prepare` closure shows the right screen before a flow starts:
 
 ```swift
-GuideFeature(namespace: "calendar", bundle: .module, prepare: { shell.selectedTab = .calendar })
+public enum CalendarGuide {
+    @MainActor
+    public static func feature(prepare: @escaping @MainActor () -> Void) -> GuideFeature {
+        GuideFeature(namespace: "calendar", bundle: .module, prepare: prepare)
+    }
+}
 ```
 
-The app creates one controller and one host at the root:
+The app creates one controller from every team's feature, and one host at the root (`GuideDemoApp.swift`):
 
 ```swift
-let controller = GuideController(features: [EditorGuide.feature(...), CalendarGuide.feature(...)])
-AppShell().guideHost(controller)
+_controller = State(initialValue: GuideController(features: [
+    EditorGuide.feature(prepare: { shell.selectedTab = .editor }),
+    CalendarGuide.feature(prepare: { shell.selectedTab = .calendar }),
+]))
+```
+
+```swift
+AppShell(shell: shell)
+    .guideHost(controller)
 ```
 
 That is the whole adoption. The `?` button opens a menu of every registered flow. See `Demo/Packages/CalendarFeature/` for the real files.
@@ -144,11 +156,11 @@ The demo has three packages: `DesignSystem` (shared `AppButton` and `AppMenuRow`
 - VoiceOver can reach controls behind the dim.
 - `pick: last` is not exercised with several matches in a UI test. The demo has only one match at that point.
 - Rotation has not been verified.
-- The walkthrough for a web-based surface would need a different resolver. That is future work.
+- Any remaining web-based surface would need a different resolver, such as a DOM one. That is optional future work.
 
 ## Fit with Notion, from public reporting only
 
-Apple's June 2026 piece (<https://developer.apple.com/news/?id=tejokjnx>) and MacRumors (<https://macrumors.com/2026/06/12/notion-is-migrating-to-swiftui>) say Notion is moving its iOS UI to SwiftUI. The Pragmatic Engineer covers its native rewrite (<https://newsletter.pragmaticengineer.com/p/notion-going-native-on-ios-and-android>). Any fit between this library and Notion is inferred from that public reporting only. I have no knowledge of Notion's internals.
+Apple's June 2026 piece (<https://developer.apple.com/news/?id=tejokjnx>) and MacRumors (<https://macrumors.com/2026/06/12/notion-is-migrating-to-swiftui>) say Notion is migrating its iOS UI to SwiftUI. The Pragmatic Engineer (<https://newsletter.pragmaticengineer.com/p/notion-going-native-on-ios-and-android>) covers its move from web-based to native. Public reporting describes the editor as the last part of that migration, so I do not know its current state. Any fit between this library and Notion is inferred from public reporting only. I have no knowledge of Notion's internals.
 
 ## Requirements
 
