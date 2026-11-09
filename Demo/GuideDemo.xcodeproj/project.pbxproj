@@ -7,13 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0FC6F1DAB7D439B3CDD4B613 /* DemoTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6C5FBE560CDE03AB336738 /* DemoTab.swift */; };
+		544DD22531E800C76F6C1680 /* AppShell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8DF9AEA107F2371FFD37B05 /* AppShell.swift */; };
 		5B5540A19646E3D6AAC55398 /* AllFlowsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7CCC4268CB35780C0523B5 /* AllFlowsUITests.swift */; };
 		6C12D2C4D042FFF40B125972 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = 37B849E570C18902CA393D93 /* DesignSystem */; };
-		73A4020DBD115149C07500B2 /* GuideDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29FEBB0713FCD9B4D89DD4C1 /* GuideDemoApp.swift */; };
 		7FF4DE6FF5B31D25E1DBB8C0 /* EditorFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 3806D58FE22DD0F9BF36DABA /* EditorFeature */; };
 		9A5158CD96F46E752D59074D /* GuideKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3CBBC245B3F52C91EECEC0A8 /* GuideKit */; };
 		B5CE6FB66D0490102D035BE0 /* GuideKitTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 11DC35516CB92B2961C48084 /* GuideKitTesting */; };
+		BE47255FB0001763DAA4985B /* GuideDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8364E1709A3DB30A381366F7 /* GuideDemoApp.swift */; };
 		F0744430F5499550F7257A0B /* CalendarFeature in Frameworks */ = {isa = PBXBuildFile; productRef = F58C212981B6E8D1F2C29BB8 /* CalendarFeature */; };
+		F7D2E704B271E0AB7A583983 /* ShellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31E3B91EA99423D4B53D681 /* ShellModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,12 +31,15 @@
 
 /* Begin PBXFileReference section */
 		0DCE7ED1A14D0EB4E32400A5 /* DesignSystem */ = {isa = PBXFileReference; lastKnownFileType = folder; name = DesignSystem; path = Packages/DesignSystem; sourceTree = SOURCE_ROOT; };
-		29FEBB0713FCD9B4D89DD4C1 /* GuideDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideDemoApp.swift; sourceTree = "<group>"; };
 		71C4B2F7B373504FDA5DE369 /* GuideDemo.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = GuideDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F7CCC4268CB35780C0523B5 /* AllFlowsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllFlowsUITests.swift; sourceTree = "<group>"; };
 		814C27A433C92970E5D102B4 /* EditorFeature */ = {isa = PBXFileReference; lastKnownFileType = folder; name = EditorFeature; path = Packages/EditorFeature; sourceTree = SOURCE_ROOT; };
+		8364E1709A3DB30A381366F7 /* GuideDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideDemoApp.swift; sourceTree = "<group>"; };
+		B8DF9AEA107F2371FFD37B05 /* AppShell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppShell.swift; sourceTree = "<group>"; };
 		C75B263FC9B3B8AE2E588C2E /* GuideDemoUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = GuideDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF1D6E41726027C85212D4D3 /* Notion_GuideKit- */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Notion_GuideKit-"; path = ..; sourceTree = SOURCE_ROOT; };
+		D31E3B91EA99423D4B53D681 /* ShellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellModel.swift; sourceTree = "<group>"; };
+		DB6C5FBE560CDE03AB336738 /* DemoTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoTab.swift; sourceTree = "<group>"; };
 		F82695FE8E5DC4955076946E /* CalendarFeature */ = {isa = PBXFileReference; lastKnownFileType = folder; name = CalendarFeature; path = Packages/CalendarFeature; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -63,7 +69,8 @@
 		1D2C551D22955F3ADB91C65D /* GuideDemo */ = {
 			isa = PBXGroup;
 			children = (
-				29FEBB0713FCD9B4D89DD4C1 /* GuideDemoApp.swift */,
+				EFA86381C99DA01CC388B79C /* App */,
+				D5BE9AAF873AE4F95F5264E6 /* Shell */,
 			);
 			path = GuideDemo;
 			sourceTree = "<group>";
@@ -104,6 +111,24 @@
 				4AF7CD5633325149CA506736 /* Packages */,
 				2B77BE1B7A3914D980BDB0A4 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		D5BE9AAF873AE4F95F5264E6 /* Shell */ = {
+			isa = PBXGroup;
+			children = (
+				B8DF9AEA107F2371FFD37B05 /* AppShell.swift */,
+				DB6C5FBE560CDE03AB336738 /* DemoTab.swift */,
+				D31E3B91EA99423D4B53D681 /* ShellModel.swift */,
+			);
+			path = Shell;
+			sourceTree = "<group>";
+		};
+		EFA86381C99DA01CC388B79C /* App */ = {
+			isa = PBXGroup;
+			children = (
+				8364E1709A3DB30A381366F7 /* GuideDemoApp.swift */,
+			);
+			path = App;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -196,7 +221,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				73A4020DBD115149C07500B2 /* GuideDemoApp.swift in Sources */,
+				544DD22531E800C76F6C1680 /* AppShell.swift in Sources */,
+				0FC6F1DAB7D439B3CDD4B613 /* DemoTab.swift in Sources */,
+				BE47255FB0001763DAA4985B /* GuideDemoApp.swift in Sources */,
+				F7D2E704B271E0AB7A583983 /* ShellModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

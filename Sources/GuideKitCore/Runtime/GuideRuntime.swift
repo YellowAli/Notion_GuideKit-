@@ -1,47 +1,5 @@
 import Foundation
 
-public enum GuideFailure: Error, Equatable, CustomStringConvertible {
-    case targetNotFound(flowID: String, step: Int, target: String)
-    case factNeverReported(flowID: String, step: Int, key: String)
-    case wrongFactType(flowID: String, step: Int, key: String)
-    case checkNotPassed(flowID: String, step: Int)
-
-    public var description: String {
-        switch self {
-        case .targetNotFound(let id, let step, let target):
-            return "`\(id)` step \(step + 1): target `\(target)` not found"
-        case .factNeverReported(let id, let step, let key):
-            return "`\(id)` step \(step + 1): fact `\(key)` was never reported"
-        case .wrongFactType(let id, let step, let key):
-            return "`\(id)` step \(step + 1): fact `\(key)` has the wrong type for this check"
-        case .checkNotPassed(let id, let step):
-            return "`\(id)` step \(step + 1): completion check did not pass"
-        }
-    }
-}
-
-public enum GuideState: Equatable {
-    case idle
-    case waiting(flow: Flow, step: Int)
-    case completed(flowID: String)
-    case failed(GuideFailure)
-}
-
-public enum GuideEvent {
-    case start(Flow, targets: Set<String>, facts: [String: FactValue])
-    case factsChanged([String: FactValue])
-    case targetsChanged(Set<String>)
-    case targetTapped(String)
-    case timeout(token: Int)
-    case cancel
-}
-
-public enum GuideEffect: Equatable {
-    case present(step: Int, Step)
-    case dismiss
-    case scheduleTimeout(token: Int)
-}
-
 /// Pure reducer deciding when each walkthrough step is complete.
 public struct GuideRuntime {
     public private(set) var state: GuideState = .idle

@@ -1,61 +1,7 @@
-import SwiftUI
 import CalendarFeature
 import DesignSystem
 import EditorFeature
-import GuideKit
-
-enum DemoTab: String, CaseIterable, Identifiable {
-    case editor, calendar
-
-    var id: String { rawValue }
-    var title: String {
-        switch self {
-        case .editor: "Editor"
-        case .calendar: "Calendar"
-        }
-    }
-    var systemImage: String {
-        switch self {
-        case .editor: "doc.text"
-        case .calendar: "calendar"
-        }
-    }
-}
-
-@MainActor @Observable
-final class ShellModel {
-    var selectedTab: DemoTab = .editor
-    /// Owned here so content survives switching tabs, while only the visible screen stays mounted.
-    let blocks = BlockStore()
-    let events = EventStore()
-}
-
-@main
-struct GuideDemoApp: App {
-    @State private var shell: ShellModel
-    @State private var controller: GuideController
-
-    init() {
-        let shell = ShellModel()
-        _shell = State(initialValue: shell)
-        _controller = State(initialValue: GuideController(features: [
-            EditorGuide.feature(prepare: {
-                shell.selectedTab = .editor
-                shell.blocks.closeMenus()
-            }),
-            CalendarGuide.feature(prepare: { shell.selectedTab = .calendar }),
-        ]))
-    }
-
-    var body: some Scene {
-        WindowGroup {
-            AppShell(shell: shell)
-                // Clears the tab bar and Calendar's form row, whose Save sits at the trailing edge.
-                .guideHost(controller, launcherBottomClearance: 120)
-                .preferredColorScheme(.light)
-        }
-    }
-}
+import SwiftUI
 
 /// A plain in-hierarchy tab bar, so guide targets in any screen reach the root host.
 struct AppShell: View {

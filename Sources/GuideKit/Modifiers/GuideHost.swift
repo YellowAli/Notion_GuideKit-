@@ -35,32 +35,6 @@ private struct GuideHostModifier: ViewModifier {
     }
 }
 
-private enum GuideTestEnvironment {
-    static let exposesStatus = ProcessInfo.processInfo.environment["GUIDEKIT_TEST"] == "1"
-    static let autostartFlowID = ProcessInfo.processInfo.environment["GUIDEKIT_TEST_FLOW"]
-}
-
-/// Publishes `controller.status` as JSON so UI tests can follow a walkthrough from another process.
-private struct GuideStatusElement: View {
-    let controller: GuideController
-
-    private var json: String {
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .sortedKeys
-        guard let data = try? encoder.encode(controller.status) else { return "" }
-        return String(decoding: data, as: UTF8.self)
-    }
-
-    var body: some View {
-        Color.clear
-            .frame(width: 1, height: 1)
-            .allowsHitTesting(false)
-            .accessibilityElement()
-            .accessibilityIdentifier("guidekit.status")
-            .accessibilityValue(json)
-    }
-}
-
 extension View {
     /// Collects guide targets beneath this view, feeds their frames to `controller`, and draws the walkthrough UI.
     /// `launcherBottomClearance` is the gap between the safe area's bottom edge and the `?` button.

@@ -1,25 +1,6 @@
 import SwiftUI
 import GuideKitCore
 
-public protocol GuideFactConvertible {
-    var guideFactValue: FactValue { get }
-}
-
-extension Bool: GuideFactConvertible { public var guideFactValue: FactValue { .bool(self) } }
-extension Int: GuideFactConvertible { public var guideFactValue: FactValue { .int(self) } }
-extension String: GuideFactConvertible { public var guideFactValue: FactValue { .string(self) } }
-
-private struct GuideControllerKey: EnvironmentKey {
-    static let defaultValue: GuideController? = nil
-}
-
-extension EnvironmentValues {
-    var guideController: GuideController? {
-        get { self[GuideControllerKey.self] }
-        set { self[GuideControllerKey.self] = newValue }
-    }
-}
-
 private struct GuideFactModifier: ViewModifier {
     @Environment(\.guideController) private var controller
     let key: String
