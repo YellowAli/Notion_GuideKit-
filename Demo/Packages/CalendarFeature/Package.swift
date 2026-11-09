@@ -6,14 +6,14 @@ let package = Package(
     platforms: [.iOS(.v17), .macOS(.v14)],
     products: [.library(name: "CalendarFeature", targets: ["CalendarFeature"])],
     dependencies: [
-        .package(path: "../../.."),
+        .package(name: "GuideKit", path: "../../.."),
         .package(path: "../DesignSystem"),
     ],
     targets: [
         .target(
             name: "CalendarFeature",
             dependencies: [
-                .product(name: "GuideKit", package: "Notion_GuideKit-"),
+                .product(name: "GuideKit", package: "GuideKit"),
                 "DesignSystem",
             ],
             resources: [.copy("Resources/flows")],
