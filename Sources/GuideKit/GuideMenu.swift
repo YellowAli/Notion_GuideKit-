@@ -83,12 +83,14 @@ struct GuideMenu: View {
         VStack(spacing: 8) {
             Text("Couldn't continue this walkthrough")
                 .multilineTextAlignment(.center)
-            Button("OK") { failureDismissed = true }
-                .buttonStyle(.plain)
-                .font(.body.weight(.semibold))
-                .frame(minWidth: 44, minHeight: 44)
-                .contentShape(Rectangle())
-                .accessibilityIdentifier("guide.failure_ok")
+            Button { failureDismissed = true } label: {
+                Text("OK")
+                    .font(.body.weight(.semibold))
+                    .frame(minWidth: 44, minHeight: 44)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("guide.failure_ok")
         }
         .padding(.horizontal, 20)
         .padding(.top, 16)

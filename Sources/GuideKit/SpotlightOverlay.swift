@@ -95,12 +95,14 @@ struct SpotlightOverlay: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                 Spacer()
-                Button("Exit") { controller.cancel() }
-                    .buttonStyle(.plain)
-                    .font(.footnote.weight(.semibold))
-                    .frame(minWidth: 44, minHeight: 44)
-                    .contentShape(Rectangle())
-                    .accessibilityIdentifier("guide.exit")
+                Button { controller.cancel() } label: {
+                    Text("Exit")
+                        .font(.footnote.weight(.semibold))
+                        .frame(minWidth: 44, minHeight: 44)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("guide.exit")
             }
             .layoutPriority(1)
             // The message scrolls only when it can't fit, so the Exit row is never pushed out.
