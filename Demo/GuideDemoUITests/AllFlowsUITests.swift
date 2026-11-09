@@ -64,6 +64,26 @@ final class AllFlowsUITests: XCTestCase {
         waitForStatus(in: app, state: "waiting", flowID: "editor.add_todo", stepIndex: 0)
     }
 
+    func testNewEventThenSaveWithoutWalkthrough() {
+        let app = launch(flowID: nil)
+        waitForStatus(in: app, state: "idle")
+        tapTab("calendar", in: app)
+
+        let newEvent = element("calendar.new_event", in: app)
+        XCTAssertTrue(newEvent.waitForExistence(timeout: timeout))
+        let events = app.descendants(matching: .any).matching(identifier: "calendar.event")
+        XCTAssertEqual(events.count, 1, "Calendar should start with its seeded event.")
+        tapCenter(of: newEvent)
+
+        let save = element("calendar.save", in: app)
+        XCTAssertTrue(save.waitForExistence(timeout: timeout))
+        let launcher = element("guide.open_menu", in: app)
+        XCTAssertFalse(save.frame.intersects(launcher.frame), "The ? button covers Save.")
+        tapCenter(of: save)
+
+        waitForCount(of: events, toEqual: 2)
+    }
+
     // MARK: - Helpers
 
     private func launch(flowID: String?) -> XCUIApplication {
@@ -76,6 +96,19 @@ final class AllFlowsUITests: XCTestCase {
 
     private func element(_ identifier: String, in app: XCUIApplication) -> XCUIElement {
         app.descendants(matching: .any)[identifier]
+    }
+
+    private func tapTab(_ tab: String, in app: XCUIApplication) {
+        let button = element("tab.\(tab)", in: app)
+        XCTAssertTrue(button.waitForExistence(timeout: timeout))
+        tapCenter(of: button)
+    }
+
+    private func waitForCount(of query: XCUIElementQuery, toEqual count: Int,
+                              file: StaticString = #filePath, line: UInt = #line) {
+        let expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "count == %d", count), object: query)
+        XCTAssertEqual(XCTWaiter().wait(for: [expectation], timeout: timeout), .completed,
+                       "Expected \(count) matches, found \(query.count)", file: file, line: line)
     }
 
     private func tapCenter(of element: XCUIElement) {

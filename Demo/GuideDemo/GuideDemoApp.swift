@@ -44,7 +44,8 @@ struct GuideDemoApp: App {
     var body: some Scene {
         WindowGroup {
             AppShell(shell: shell)
-                .guideHost(controller)
+                // Clears the tab bar and Calendar's form row, whose Save sits at the trailing edge.
+                .guideHost(controller, launcherBottomClearance: 120)
                 .preferredColorScheme(.light)
         }
     }
@@ -86,6 +87,7 @@ struct AppShell: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
+                .accessibilityIdentifier("tab.\(tab.rawValue)")
                 .accessibilityAddTraits(shell.selectedTab == tab ? .isSelected : [])
             }
         }

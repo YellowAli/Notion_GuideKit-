@@ -3,9 +3,8 @@ import SwiftUI
 /// The idle-state walkthrough UI: a floating button, the list of flows, and the failure card.
 struct GuideMenu: View {
     let controller: GuideController
+    let bottomClearance: CGFloat
 
-    /// Keeps the floating button above a typical bottom tab bar.
-    private static let bottomClearance: CGFloat = 84
     private static let panelMaxWidth: CGFloat = 320
 
     @State private var isOpen = false
@@ -49,7 +48,7 @@ struct GuideMenu: View {
             .accessibilityIdentifier("guide.open_menu")
         }
         .padding(.trailing, 16)
-        .padding(.bottom, Self.bottomClearance)
+        .padding(.bottom, bottomClearance)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
     }
 

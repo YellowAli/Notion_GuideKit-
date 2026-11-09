@@ -20,6 +20,7 @@ public struct CalendarView: View {
                             .font(.system(size: 16))
                             .foregroundStyle(Theme.ink)
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .accessibilityIdentifier("calendar.event")
                     }
                 }
                 .padding(.horizontal, Theme.margin)
