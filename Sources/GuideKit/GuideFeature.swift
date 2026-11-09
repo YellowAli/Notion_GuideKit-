@@ -29,6 +29,9 @@ public struct GuideFeature {
         var flows: [Flow] = []
         var errors: [String] = []
         var seen = Set<String>()
+        guard !urls.isEmpty else {
+            return ([], ["No flow files found for namespace `\(namespace)`. Bundle a `flows` folder with resources: [.copy(\"Resources/flows\")]."])
+        }
         for url in urls.sorted(by: { $0.path < $1.path }) {
             do {
                 let flow = try JSONDecoder().decode(Flow.self, from: Data(contentsOf: url))

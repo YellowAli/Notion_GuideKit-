@@ -141,4 +141,11 @@ final class GuideControllerTests: XCTestCase {
         c.reportFact("a.k", .int(1))
         XCTAssertEqual(c.status.state, "completed")
     }
+
+    func testMissingFlowFilesIsALoadError() {
+        let result = GuideFeature.load(urls: [], namespace: "t")
+        XCTAssertTrue(result.flows.isEmpty)
+        XCTAssertEqual(result.errors.count, 1)
+        XCTAssertTrue(result.errors[0].contains("`t`"), result.errors[0])
+    }
 }
