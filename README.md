@@ -12,11 +12,11 @@ Many clubs I've been part of use Notion as their central hub, but most students 
 
 Notion's built-in connectors and AI help, but they don't teach you how to use the app. It also becomes tiresome to ask the AI for every task.
 
-An in-app walkthrough teaches: it points at the real control and waits for the person to tap it. The usual problem is that walkthroughs rot. A button gets renamed, the tour points at nothing, and nobody notices until a user does.
+An in-app walkthrough platform teaches: it points at the real control and waits for the person to tap it. The usual problem is that walkthroughs rot. A button gets renamed, the tour points at nothing, and nobody notices until a user does.
 
 GuideKit makes that rot a test failure.
 
-**Assumption:** a multi-team org would use this. Each team owns its own screens and its own flows, so the format has to work without a central owner. I do not know how Notion is organized internally, and nothing here claims to.
+**Assumption:** a multi-team org would use this. The idea is this renderer/single engine architecture is easy to implement by teams, all they need are tags and JSON and they can quickly spin up walk throughs and tutorials.
 
 ## Add a tutorial to your feature
 
